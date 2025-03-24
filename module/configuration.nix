@@ -3,7 +3,7 @@
   homebrew = {
     enable = true;
 
-    onActivation.cleanup = "uninstall";
+    onActivation.cleanup = "none";
     onActivation.autoUpdate = true;
     onActivation.upgrade = true;
 
@@ -37,7 +37,7 @@
     ]; # gui applications
   };
 
-  # add more system settings here
+  # Nix settings
   nix = {
     optimise.automatic = true;
 
@@ -56,6 +56,7 @@
 
   programs.zsh.enable = true;
 
+  # Darwin system settings
   system = {
     defaults = {
       dock.autohide = true;
