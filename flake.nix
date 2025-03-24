@@ -3,8 +3,10 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    nix-darwin.url = "github:LnL7/nix-darwin/master";
-    nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
+    darwin.inputs.nixpkgs.follows = "nixpkgs";
+    darwin.url = "github:LnL7/nix-darwin/master";
+    home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    home-manager.url = "github:nix-community/home-manager";
     nix-homebrew.url = "github:zhaofengli/nix-homebrew";
 
     homebrew-core = {
@@ -38,48 +40,14 @@
     };
   };
 
-  outputs = inputs@{ self, nix-darwin, nixpkgs, nix-homebrew, ... }:
-  {
-    # Build darwin flake using:
-    # $ darwin-rebuild build --flake .#simple
-    darwinConfigurations."air" = nix-darwin.lib.darwinSystem {
-      specialArgs = inputs;
-      modules = [
-        ({ config, ... }: {
-          homebrew.taps = builtins.attrNames config.nix-homebrew.taps;
-        })
-
-        ./configuration.nix
-        nix-homebrew.darwinModules.nix-homebrew
-
-        {
-          nix-homebrew = {
-            # Install homebrew under the default prefix
-            enable = true;
-
-            # Apple Silicon Only
-            enableRosetta = true;
-
-            # User owning the Homebrew prefix
-            user = "mazinabdallah";
-
-            # Automatically migrate existing Homebrew installations
-            autoMigrate = true;
-
-            taps = with inputs; {
-              "homebrew/homebrew-core" = homebrew-core;
-              "homebrew/homebrew-cask" = homebrew-cask;
-              "homebrew/homebrew-cask-fonts" = homebrew-cask-fonts;
-              "homebrew/homebrew-services" = homebrew-services;
-              "d12frosted/homebrew-emacs-plus" = homebrew-emacs-plus;
-              "nikitabobko/homebrew-tap" = homebrew-nikitabobko;
-            };
-
-            # Disable manual tap additions
-            mutableTaps = false;
-          };
-        }
-      ];
+  outputs = inputs@{ self, darwin, nixpkgs, nix-homebrew, home-manager, ... }:
+  let
+    darwin-system = import ./system/darwin.nix { inherit inputs username; };
+    username = "mazinabdallah";
+  in {
+    darwinConfigurations = {
+      aarch64 = darwin-system "aarch64-darwin";
+      x86_64 = darwin-system "x86-64-darwin";
     };
   };
 }
