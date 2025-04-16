@@ -6,6 +6,7 @@
     awscli2
     fd
     gh
+    nodejs
     ripgrep
   ];
   home.stateVersion = "24.11";
@@ -15,7 +16,7 @@
   # -----------------------------------------------
   programs.bat = {
     enable = true;
-    config = { theme = "tokyonight"; };
+    config = {theme = "tokyonight";};
     themes = {
       tokyonight = {
         src = pkgs.fetchFromGitHub {

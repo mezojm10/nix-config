@@ -9,8 +9,7 @@
 
     brews = [
       {
-        name = "emacs-plus@29";
-        args = [ "--with-native-comp" ];
+        name = "emacs-plus";
       }
       {
         name = "postgresql@16";
@@ -39,7 +38,26 @@
 
   # Nix settings
   nix = {
-    optimise.automatic = true;
+    gc = {
+      automatic = true;
+      interval = [
+        {
+          Hour = 0;
+          Minute = 0;
+        }
+      ];
+      options = "--delete-older-than 7d";
+    };
+
+    optimise = {
+      automatic = true;
+      interval = [
+        {
+          Hour = 0;
+          Minute = 0;
+        }
+      ];
+    };
 
     settings = {
       builders-use-substitutes = true;

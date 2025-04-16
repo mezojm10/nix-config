@@ -49,5 +49,9 @@
       aarch64 = darwin-system "aarch64-darwin";
       x86_64 = darwin-system "x86-64-darwin";
     };
+
+    formatter = {
+      aarch64-darwin = nixpkgs.legacyPackages.aarch64-darwin.alejandra;
+    };
   };
 }

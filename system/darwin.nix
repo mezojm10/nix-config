@@ -1,8 +1,7 @@
 {
   inputs,
   username,
-}: system:
-let
+}: system: let
   system-config = import ../module/configuration.nix;
   home-manager-config = import ../module/home-manager.nix;
 in
@@ -11,7 +10,7 @@ in
     # modules: allows for reusable code
     modules = [
       {users.users.${username}.home = "/Users/${username}";}
-      ({ config, ... }: {
+      ({config, ...}: {
         homebrew.taps = builtins.attrNames config.nix-homebrew.taps;
       })
       system-config
@@ -53,4 +52,4 @@ in
       }
       # add more nix modules here
     ];
-}
+  }
