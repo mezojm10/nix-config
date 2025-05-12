@@ -40,18 +40,60 @@
     };
   };
 
-  outputs = inputs@{ self, darwin, nixpkgs, nix-homebrew, home-manager, ... }:
-  let
-    darwin-system = import ./system/darwin.nix { inherit inputs username; };
+  outputs = inputs @ {
+    self,
+    darwin,
+    nixpkgs,
+    nix-homebrew,
+    home-manager,
+    ...
+  }: let
+    darwin-system = import ./system/darwin.nix {inherit inputs username;};
     username = "mazinabdallah";
   in {
     darwinConfigurations = {
       aarch64 = darwin-system "aarch64-darwin";
-      x86_64 = darwin-system "x86-64-darwin";
+      x86_64 = darwin-system "x86_64-darwin";
     };
 
     formatter = {
       aarch64-darwin = nixpkgs.legacyPackages.aarch64-darwin.alejandra;
+      x86_64-darwin = nixpkgs.legacyPackages.x86_64-darwin.alejandra;
+    };
+
+    devShells = {
+      aarch64-darwin = {
+        default = let
+          pkgs = nixpkgs.legacyPackages.aarch64-darwin;
+        in
+          pkgs.mkShell {
+            buildInputs = with pkgs; [
+              nixd
+            ];
+          };
+      };
+
+      x86_64-darwin = {
+        default = let
+          pkgs = nixpkgs.legacyPackages.x86_64-darwin;
+        in
+          pkgs.mkShell {
+            buildInputs = with pkgs; [
+              nixd
+            ];
+          };
+      };
+
+      x86_64-linux = {
+        default = let
+          pkgs = nixpkgs.legacyPackages.x86_64-linux;
+        in
+          pkgs.mkShell {
+            buildInputs = with pkgs; [
+              nixd
+            ];
+          };
+      };
     };
   };
 }
