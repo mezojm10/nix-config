@@ -38,26 +38,27 @@
 
   # Nix settings
   nix = {
-    gc = {
-      automatic = true;
-      interval = [
-        {
-          Hour = 0;
-          Minute = 0;
-        }
-      ];
-      options = "--delete-older-than 7d";
-    };
-
-    optimise = {
-      automatic = true;
-      interval = [
-        {
-          Hour = 0;
-          Minute = 0;
-        }
-      ];
-    };
+    enable = false;
+    # gc = {
+    #   automatic = true;
+    #   interval = [
+    #     {
+    #       Hour = 0;
+    #       Minute = 0;
+    #     }
+    #   ];
+    #   options = "--delete-older-than 7d";
+    # };
+    #
+    # optimise = {
+    #   automatic = true;
+    #   interval = [
+    #     {
+    #       Hour = 0;
+    #       Minute = 0;
+    #     }
+    #   ];
+    # };
 
     settings = {
       builders-use-substitutes = true;
