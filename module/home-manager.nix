@@ -62,6 +62,10 @@
         name = "Mazin Abdallah";
         email = "mezodrdr@gmail.com";
       };
+      ui = {
+        default-command = "log";
+        paginate = "never";
+      };
     };
   };
 
