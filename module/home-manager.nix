@@ -95,6 +95,9 @@
   programs.nushell = {
     enable = true;
 
+    # Completions for jj
+    extraConfig = builtins.readFile ../dotfiles/nushell/jj-completions.nu;
+
     shellAliases = {
       cat = "bat";
       drc = "sudo darwin-rebuild check --flake ~/nix";
