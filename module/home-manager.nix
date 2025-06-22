@@ -54,6 +54,16 @@
     delta.enable = true;
   };
 
+  programs.jujutsu = {
+    enable = true;
+    settings = {
+      user = {
+        name = "Mazin Abdallah";
+        email = "mezodrdr@gmail.com";
+      };
+    };
+  };
+
   programs.lazygit = {
     enable = true;
     settings = {
