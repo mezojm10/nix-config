@@ -12,6 +12,12 @@
   ];
   home.stateVersion = "24.11";
 
+  home.shellAliases = {
+      cat = "bat";
+      lg = "lazygit";
+      vim = "nvim";
+  };
+
   # -----------------------------------------------
   # ---------------- DOTFILES ---------------------
   # -----------------------------------------------
@@ -51,7 +57,6 @@
   programs.eza = {
     enable = true;
     enableZshIntegration = true;
-    enableNushellIntegration = true;
     git = true;
     icons = "auto";
   };
@@ -64,6 +69,11 @@
   programs.git = {
     enable = true;
     delta.enable = true;
+  };
+
+  programs.helix = {
+    enable = true;
+    defaultEditor = true;
   };
 
   programs.lazygit = {
@@ -81,7 +91,7 @@
 
   programs.neovim = {
     enable = true;
-    defaultEditor = true;
+    # defaultEditor = true;
     withNodeJs = true;
     withPython3 = true;
     withRuby = true;
@@ -97,14 +107,6 @@
 
     # Completions for jj
     extraConfig = builtins.readFile ../dotfiles/nushell/jj-completions.nu;
-
-    shellAliases = {
-      cat = "bat";
-      drc = "sudo darwin-rebuild check --flake ~/nix";
-      drs = "sudo darwin-rebuild switch --flake ~/nix";
-      lg = "lazygit";
-      vim = "nvim";
-    };
   };
 
   programs.starship = {
@@ -115,6 +117,12 @@
     settings = {
       add_newline = false;
     };
+  };
+
+  programs.zellij = {
+    enable = true;
+    enableZshIntegration = true;
+    attachExistingSession = true;
   };
 
   programs.zoxide = {
@@ -132,16 +140,6 @@
       enable = true;
       plugins = ["git"];
       theme = "robbyrussell";
-    };
-
-    shellAliases = {
-      ".." = "cd ..";
-      cat = "bat";
-      drc = "sudo darwin-rebuild check --flake ~/nix";
-      drs = "sudo darwin-rebuild switch --flake ~/nix";
-      lg = "lazygit";
-      ls = "eza";
-      vim = "nvim";
     };
 
     syntaxHighlighting.enable = true;
