@@ -3,10 +3,10 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    darwin.inputs.nixpkgs.follows = "nixpkgs";
     darwin.url = "github:LnL7/nix-darwin/master";
-    home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    darwin.inputs.nixpkgs.follows = "nixpkgs";
     home-manager.url = "github:nix-community/home-manager";
+    home-manager.inputs.nixpkgs.follows = "nixpkgs";
     nix-homebrew.url = "github:zhaofengli/nix-homebrew";
 
     homebrew-core = {
@@ -52,7 +52,7 @@
     username = "mazinabdallah";
   in {
     darwinConfigurations = {
-      aarch64 = darwin-system "aarch64-darwin";
+      Mazins-MacBook-Air = darwin-system "aarch64-darwin";
       x86_64 = darwin-system "x86_64-darwin";
     };
 

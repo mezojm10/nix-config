@@ -87,13 +87,18 @@
     withRuby = true;
   };
 
+  programs.nh = {
+    enable = true;
+    flake = "${config.home.homeDirectory}/nix";
+  };
+
   programs.nushell = {
     enable = true;
 
     shellAliases = {
       cat = "bat";
-      drc = "sudo darwin-rebuild check --flake ~/nix#aarch64";
-      drs = "sudo darwin-rebuild switch --flake ~/nix#aarch64";
+      drc = "sudo darwin-rebuild check --flake ~/nix";
+      drs = "sudo darwin-rebuild switch --flake ~/nix";
       lg = "lazygit";
       vim = "nvim";
     };
@@ -129,8 +134,8 @@
     shellAliases = {
       ".." = "cd ..";
       cat = "bat";
-      drc = "sudo darwin-rebuild check --flake ~/nix#aarch64";
-      drs = "sudo darwin-rebuild switch --flake ~/nix#aarch64";
+      drc = "sudo darwin-rebuild check --flake ~/nix";
+      drs = "sudo darwin-rebuild switch --flake ~/nix";
       lg = "lazygit";
       ls = "eza";
       vim = "nvim";
