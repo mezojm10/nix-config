@@ -87,11 +87,20 @@
 
   programs.nushell = {
     enable = true;
+
+    shellAliases = {
+      cat = "bat";
+      drc = "darwin-rebuild check --flake ~/nix#aarch64";
+      drs = "darwin-rebuild switch --flake ~/nix#aarch64";
+      lg = "lazygit";
+      vim = "nvim";
+    };
   };
 
   programs.starship = {
     enable = true;
     enableZshIntegration = true;
+    enableNushellIntegration = true;
 
     settings = {
       add_newline = false;
