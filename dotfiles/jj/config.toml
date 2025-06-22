@@ -1,0 +1,24 @@
+"$schema" = "https://jj-vcs.github.io/jj/latest/config-schema.json"
+
+[user]
+email = "mezodrdr@gmail.com"
+name = "Mazin Abdallah"
+
+[ui]
+default-command = ["log", "--no-pager"]
+
+# override user.email if the repository is located under ~/workspace/alsavvy
+[[--scope]]
+--when.repositories = ["~/workspace/alsavvy"]
+[--scope.user]
+email = "mazin.abdallah@alsavvy.co"
+
+# disable pagination for `jj status`, use `delta` for `jj diff` and `jj show`
+[[--scope]]
+--when.commands = ["status"]
+[--scope.ui]
+paginate = "never"
+[[--scope]]
+--when.commands = ["diff", "show"]
+[--scope.ui]
+pager = "delta"

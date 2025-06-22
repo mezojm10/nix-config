@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{pkgs, config, ...}: {
   # ------------------------------------------------
   # -------------- HOME ----------------------------
   # ------------------------------------------------
@@ -6,10 +6,21 @@
     awscli2
     fd
     gh
+    jujutsu
     nodejs
     ripgrep
   ];
   home.stateVersion = "24.11";
+
+  # -----------------------------------------------
+  # ---------------- DOTFILES ---------------------
+  # -----------------------------------------------
+
+  home.file = {
+    ".config/jj" = {
+      source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/nix/dotfiles/jj";
+    };
+  };
 
   # -----------------------------------------------
   # ---------------- PROGRAMS ---------------------
@@ -53,20 +64,6 @@
   programs.git = {
     enable = true;
     delta.enable = true;
-  };
-
-  programs.jujutsu = {
-    enable = true;
-    settings = {
-      user = {
-        name = "Mazin Abdallah";
-        email = "mezodrdr@gmail.com";
-      };
-      ui = {
-        default-command = "log";
-        paginate = "never";
-      };
-    };
   };
 
   programs.lazygit = {
