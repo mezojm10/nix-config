@@ -99,12 +99,18 @@
 
   programs.starship = {
     enable = true;
-    enableZshIntegration = true;
     enableNushellIntegration = true;
+    enableZshIntegration = true;
 
     settings = {
       add_newline = false;
     };
+  };
+
+  programs.zoxide = {
+    enable = true;
+    enableNushellIntegration = true;
+    enableZshIntegration = true;
   };
 
   programs.zsh = {
@@ -114,7 +120,7 @@
 
     oh-my-zsh = {
       enable = true;
-      plugins = ["git" "z"];
+      plugins = ["git"];
       theme = "robbyrussell";
     };
 
