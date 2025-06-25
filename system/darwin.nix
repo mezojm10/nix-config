@@ -9,7 +9,12 @@ in
     inherit system;
     # modules: allows for reusable code
     modules = [
-      {users.users.${username}.home = "/Users/${username}";}
+      {
+        users.users.${username}.home = "/Users/${username}";
+
+        # Set system.primaryUser to the username
+        system.primaryUser = username;
+      }
       ({config, ...}: {
         homebrew.taps = builtins.attrNames config.nix-homebrew.taps;
       })

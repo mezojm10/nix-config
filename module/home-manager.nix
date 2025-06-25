@@ -92,8 +92,8 @@
 
     shellAliases = {
       cat = "bat";
-      drc = "darwin-rebuild check --flake ~/nix#aarch64";
-      drs = "darwin-rebuild switch --flake ~/nix#aarch64";
+      drc = "sudo darwin-rebuild check --flake ~/nix#aarch64";
+      drs = "sudo darwin-rebuild switch --flake ~/nix#aarch64";
       lg = "lazygit";
       vim = "nvim";
     };
@@ -129,8 +129,8 @@
     shellAliases = {
       ".." = "cd ..";
       cat = "bat";
-      drc = "darwin-rebuild check --flake ~/nix#aarch64";
-      drs = "darwin-rebuild switch --flake ~/nix#aarch64";
+      drc = "sudo darwin-rebuild check --flake ~/nix#aarch64";
+      drs = "sudo darwin-rebuild switch --flake ~/nix#aarch64";
       lg = "lazygit";
       ls = "eza";
       vim = "nvim";
