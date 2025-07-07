@@ -133,6 +133,9 @@
     enable = true;
     enableZshIntegration = true;
     attachExistingSession = true;
+    settings = {
+        default_shell = "nu";
+    };
   };
 
   programs.zoxide = {
