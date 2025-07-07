@@ -19,7 +19,6 @@
 
     casks = [
       "1password"
-      "aerospace"
       "bruno"
       "discord"
       "firefox"
@@ -27,7 +26,6 @@
       "font-iosevka"
       "font-jetbrains-mono"
       "google-chrome"
-      "kitty"
       "maccy"
       "raycast"
       "stremio"

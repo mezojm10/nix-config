@@ -122,22 +122,6 @@
         "type": "github"
       }
     },
-    "homebrew-nikitabobko": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1740311806,
-        "narHash": "sha256-IW8C2HtlLLGTylUou6OcLW2juLe1yNX+Ikj0yQPfa48=",
-        "owner": "nikitabobko",
-        "repo": "homebrew-tap",
-        "rev": "f48b006349858421c650551034c2c3beaea2936b",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nikitabobko",
-        "repo": "homebrew-tap",
-        "type": "github"
-      }
-    },
     "homebrew-services": {
       "flake": false,
       "locked": {
@@ -196,7 +180,6 @@
         "homebrew-cask-fonts": "homebrew-cask-fonts",
         "homebrew-core": "homebrew-core",
         "homebrew-emacs-plus": "homebrew-emacs-plus",
-        "homebrew-nikitabobko": "homebrew-nikitabobko",
         "homebrew-services": "homebrew-services",
         "nix-homebrew": "nix-homebrew",
         "nixpkgs": "nixpkgs"

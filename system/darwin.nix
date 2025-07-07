@@ -48,7 +48,6 @@ in
             "homebrew/homebrew-cask-fonts" = homebrew-cask-fonts;
             "homebrew/homebrew-services" = homebrew-services;
             "d12frosted/homebrew-emacs-plus" = homebrew-emacs-plus;
-            "nikitabobko/homebrew-tap" = homebrew-nikitabobko;
           };
 
           # Disable manual tap additions

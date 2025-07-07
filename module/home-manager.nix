@@ -2,6 +2,7 @@
   # ------------------------------------------------
   # -------------- HOME ----------------------------
   # ------------------------------------------------
+
   home.packages = with pkgs; [
     awscli2
     fd
@@ -26,11 +27,20 @@
     ".config/jj" = {
       source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/nix/dotfiles/jj";
     };
+
+    ".config/aerospace" = {
+      source = ../dotfiles/aerospace;
+    };
   };
 
   # -----------------------------------------------
   # ---------------- PROGRAMS ---------------------
   # -----------------------------------------------
+
+  programs.aerospace = {
+    enable = true;
+  };
+
   programs.bat = {
     enable = true;
     config = {theme = "tokyonight";};

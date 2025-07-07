@@ -33,11 +33,6 @@
       url = "github:d12frosted/homebrew-emacs-plus";
       flake = false;
     };
-
-    homebrew-nikitabobko = {
-      url = "github:nikitabobko/homebrew-tap";
-      flake = false;
-    };
   };
 
   outputs = inputs @ {
