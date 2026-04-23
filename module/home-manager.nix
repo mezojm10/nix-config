@@ -78,7 +78,12 @@
 
   programs.git = {
     enable = true;
-    delta.enable = true;
+    signing.format = null;
+  };
+
+  programs.delta = {
+    enable = true;
+    enableGitIntegration = true;
   };
 
   programs.helix = {
