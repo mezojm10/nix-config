@@ -3,7 +3,7 @@
   username,
 }: system: let
   system-config = import ../module/configuration.nix;
-  home-manager-config = import ../module/home-manager.nix;
+  home-manager-config = ../module/home-manager.nix;
 in
   inputs.darwin.lib.darwinSystem {
     inherit system;
@@ -24,8 +24,11 @@ in
       inputs.home-manager.darwinModules.home-manager
       {
         # add home-manager settings here
-        home-manager.useGlobalPkgs = true;
+        # useGlobalPkgs is off so home-manager evaluates its own nixpkgs,
+        # which lets home-manager.nix set nixpkgs.config (e.g. allowUnfreePredicate).
+        home-manager.useGlobalPkgs = false;
         home-manager.useUserPackages = true;
+        home-manager.extraSpecialArgs = {inherit inputs;};
         home-manager.users."${username}" = home-manager-config;
 
         # Homebrew

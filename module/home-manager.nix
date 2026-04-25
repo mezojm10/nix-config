@@ -1,7 +1,18 @@
-{pkgs, config, ...}: {
+{
+  pkgs,
+  lib,
+  config,
+  ...
+}: {
   # ------------------------------------------------
   # -------------- HOME ----------------------------
   # ------------------------------------------------
+
+  # Allow specific unfree packages on a per-package basis.
+  nixpkgs.config.allowUnfreePredicate = pkg:
+    builtins.elem (lib.getName pkg) [
+      "claude-code"
+    ];
 
   home.packages = with pkgs; [
     awscli2
@@ -14,9 +25,9 @@
   home.stateVersion = "24.11";
 
   home.shellAliases = {
-      cat = "bat";
-      lg = "lazygit";
-      vim = "nvim";
+    cat = "bat";
+    lg = "lazygit";
+    vim = "nvim";
   };
 
   # -----------------------------------------------
@@ -36,6 +47,7 @@
   # -----------------------------------------------
   # ---------------- PROGRAMS ---------------------
   # -----------------------------------------------
+  #
 
   programs.aerospace = {
     enable = true;
@@ -55,6 +67,10 @@
         file = "extras/sublime/tokyonight_night.tmTheme";
       };
     };
+  };
+
+  programs.claude-code = {
+    enable = true;
   };
 
   programs.direnv = {
@@ -139,7 +155,7 @@
     enableZshIntegration = true;
     attachExistingSession = true;
     settings = {
-        default_shell = "nu";
+      default_shell = "nu";
     };
   };
 

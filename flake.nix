@@ -45,6 +45,20 @@
   }: let
     darwin-system = import ./system/darwin.nix {inherit inputs username;};
     username = "mazinabdallah";
+
+    devShellPackages = pkgs:
+      with pkgs; [
+        nixd
+      ];
+
+    mkDevShell = system: {
+      default = let
+        pkgs = nixpkgs.legacyPackages.${system};
+      in
+        pkgs.mkShell {
+          buildInputs = devShellPackages pkgs;
+        };
+    };
   in {
     darwinConfigurations = {
       Mazins-MacBook-Air = darwin-system "aarch64-darwin";
@@ -57,38 +71,9 @@
     };
 
     devShells = {
-      aarch64-darwin = {
-        default = let
-          pkgs = nixpkgs.legacyPackages.aarch64-darwin;
-        in
-          pkgs.mkShell {
-            buildInputs = with pkgs; [
-              nixd
-            ];
-          };
-      };
-
-      x86_64-darwin = {
-        default = let
-          pkgs = nixpkgs.legacyPackages.x86_64-darwin;
-        in
-          pkgs.mkShell {
-            buildInputs = with pkgs; [
-              nixd
-            ];
-          };
-      };
-
-      x86_64-linux = {
-        default = let
-          pkgs = nixpkgs.legacyPackages.x86_64-linux;
-        in
-          pkgs.mkShell {
-            buildInputs = with pkgs; [
-              nixd
-            ];
-          };
-      };
+      aarch64-darwin = mkDevShell "aarch64-darwin";
+      x86_64-darwin = mkDevShell "x86_64-darwin";
+      x86_64-linux = mkDevShell "x86_64-linux";
     };
   };
 }
