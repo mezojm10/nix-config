@@ -24,6 +24,11 @@
   ];
   home.stateVersion = "26.05";
 
+  # Doom's CLI lives in its own checkout, outside the nix store, so nothing puts
+  # it on PATH by default -- `doom sync` would just be "command not found".
+  # zsh is the login shell, so hm-session-vars.sh carries this into zellij/nushell.
+  home.sessionPath = ["${config.home.homeDirectory}/.config/emacs/bin"];
+
   home.shellAliases = {
     cat = "bat";
     lg = "lazygit";
@@ -126,6 +131,11 @@
     withNodeJs = true;
     withPython3 = true;
     withRuby = true;
+
+    # ~/.config/nvim is a git-managed kickstart.nvim checkout, so home-manager must
+    # not own init.lua. This passes the provider host_prog settings via wrapper args
+    # (--cmd 'lua dofile(...)') instead of writing ~/.config/nvim/init.lua.
+    sideloadInitLua = true;
   };
 
   programs.nh = {

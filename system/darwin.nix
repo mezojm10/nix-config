@@ -15,12 +15,8 @@ in
         # Set system.primaryUser to the username
         system.primaryUser = username;
       }
-      ({config, ...}: {
-        homebrew.taps = builtins.attrNames config.nix-homebrew.taps;
-      })
       system-config
 
-      inputs.nix-homebrew.darwinModules.nix-homebrew
       inputs.home-manager.darwinModules.home-manager
       {
         # add home-manager settings here
@@ -28,34 +24,11 @@ in
         # which lets home-manager.nix set nixpkgs.config (e.g. allowUnfreePredicate).
         home-manager.useGlobalPkgs = false;
         home-manager.useUserPackages = true;
+        # Move pre-existing files aside instead of aborting activation when
+        # home-manager wants to take over a path that already has a real file.
+        home-manager.backupFileExtension = "hm-backup";
         home-manager.extraSpecialArgs = {inherit inputs;};
         home-manager.users."${username}" = home-manager-config;
-
-        # Homebrew
-        nix-homebrew = {
-          # Install homebrew under the default prefix
-          enable = true;
-
-          # Apple Silicon Only
-          enableRosetta = true;
-
-          # User owning the Homebrew prefix
-          user = "mazinabdallah";
-
-          # Automatically migrate existing Homebrew installations
-          autoMigrate = true;
-
-          taps = with inputs; {
-            "homebrew/homebrew-core" = homebrew-core;
-            "homebrew/homebrew-cask" = homebrew-cask;
-            "homebrew/homebrew-cask-fonts" = homebrew-cask-fonts;
-            "homebrew/homebrew-services" = homebrew-services;
-            "d12frosted/homebrew-emacs-plus" = homebrew-emacs-plus;
-          };
-
-          # Disable manual tap additions
-          mutableTaps = false;
-        };
       }
       # add more nix modules here
     ];

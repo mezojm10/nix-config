@@ -1,38 +1,40 @@
-{
-  # Homebrew
-  homebrew = {
-    enable = true;
-
-    onActivation.cleanup = "none";
-    onActivation.autoUpdate = true;
-    onActivation.upgrade = true;
-
-    brews = [
-      {
-        name = "emacs-plus";
-      }
-      {
-        name = "postgresql@16";
-        restart_service = "changed";
-      }
+{pkgs, ...}: {
+  # Allow specific unfree packages on a per-package basis.
+  nixpkgs.config.allowUnfreePredicate = pkg:
+    builtins.elem (pkgs.lib.getName pkg) [
+      "1password"
+      "raycast"
     ];
 
-    casks = [
-      "1password"
-      "bruno"
-      "discord"
-      "firefox"
-      "font-hack-nerd-font"
-      "font-iosevka"
-      "font-jetbrains-mono"
-      "google-chrome"
-      "maccy"
-      "raycast"
-      "stremio"
-      "vlc"
-      "visual-studio-code"
-    ]; # gui applications
-  };
+  # GUI applications. nix-darwin rsyncs these into /Applications/Nix Apps as real
+  # bundles (not symlinks), so Spotlight and Raycast index them.
+  #
+  # NOT MANAGED HERE -- install these by hand from the vendor .dmg/.pkg.
+  # Deliberately left out, not forgotten. Sizes are the nix closure cost:
+  #   - Visual Studio Code (~834M)
+  #   - Bruno              (~712M)
+  #   - Google Chrome      (~706M)
+  #   - Discord            (~642M)
+  #   - Firefox            (~487M)
+  #   - Stremio            (no darwin package in nixpkgs at all)
+  # The five sized apps all self-update, which nix cannot do -- a store-installed
+  # copy only changes on `nix flake update`. Because bundles are copied rather than
+  # symlinked, anything listed below also costs disk twice: once in /nix/store and
+  # once in /Applications/Nix Apps.
+  environment.systemPackages = with pkgs; [
+    _1password-gui
+    emacs30
+    maccy
+    racket
+    raycast
+    vlc-bin
+  ];
+
+  fonts.packages = with pkgs; [
+    iosevka
+    jetbrains-mono
+    nerd-fonts.hack
+  ];
 
   # Nix settings
   nix = {
