@@ -2,7 +2,6 @@
   # Allow specific unfree packages on a per-package basis.
   nixpkgs.config.allowUnfreePredicate = pkg:
     builtins.elem (pkgs.lib.getName pkg) [
-      "1password"
       "raycast"
     ];
 
@@ -22,10 +21,8 @@
   # symlinked, anything listed below also costs disk twice: once in /nix/store and
   # once in /Applications/Nix Apps.
   environment.systemPackages = with pkgs; [
-    _1password-gui
     emacs30
     maccy
-    racket
     raycast
     vlc-bin
   ];
