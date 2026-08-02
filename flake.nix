@@ -7,46 +7,28 @@
     darwin.inputs.nixpkgs.follows = "nixpkgs";
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    flake-parts.url = "github:hercules-ci/flake-parts";
+    import-tree.url = "github:denful/import-tree";
   };
 
-  outputs = inputs @ {
-    self,
-    darwin,
-    nixpkgs,
-    home-manager,
-    ...
-  }: let
-    darwin-system = import ./system/darwin.nix {inherit inputs username;};
-    username = "mazinabdallah";
-
-    devShellPackages = pkgs:
-      with pkgs; [
-        nixd
+  outputs = inputs:
+    inputs.flake-parts.lib.mkFlake {inherit inputs;} {
+      # Which systems perSystem is instantiated for (formatter, devShells).
+      systems = ["aarch64-darwin" "x86_64-linux"];
+      # Auto-import every top-level module under ./modules.
+      # All feature files live there as flake-parts modules.
+      imports = [
+        (inputs.import-tree ./modules)
+        # Enable the flake.modules.<class>.<aspect> storage for deferred modules.
+        inputs.flake-parts.flakeModules.modules
       ];
 
-    mkDevShell = system: {
-      default = let
-        pkgs = nixpkgs.legacyPackages.${system};
-      in
-        pkgs.mkShell {
-          buildInputs = devShellPackages pkgs;
+      # Per-system flake outputs kept here since they aren't features.
+      perSystem = {pkgs, ...}: {
+        formatter = pkgs.alejandra;
+        devShells = {
+          default = pkgs.mkShell {buildInputs = [pkgs.nixd];};
         };
+      };
     };
-  in {
-    darwinConfigurations = {
-      Mazins-MacBook-Air = darwin-system "aarch64-darwin";
-      x86_64 = darwin-system "x86_64-darwin";
-    };
-
-    formatter = {
-      aarch64-darwin = nixpkgs.legacyPackages.aarch64-darwin.alejandra;
-      x86_64-darwin = nixpkgs.legacyPackages.x86_64-darwin.alejandra;
-    };
-
-    devShells = {
-      aarch64-darwin = mkDevShell "aarch64-darwin";
-      x86_64-darwin = mkDevShell "x86_64-darwin";
-      x86_64-linux = mkDevShell "x86_64-linux";
-    };
-  };
 }
