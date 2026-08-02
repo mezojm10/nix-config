@@ -1,16 +1,4 @@
 {
-  nixConfig = {
-    builders-use-substitutes = true;
-    experimental-features = ["flakes" "nix-command" "pipe-operators"];
-    flake-registry = "";
-    substituters = ["https://nix-community.cachix.org"];
-    trusted-public-keys = [
-      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-    ];
-    trusted-users = ["@wheel"];
-    warn-dirty = false;
-  };
-
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     darwin.url = "github:LnL7/nix-darwin/master";
