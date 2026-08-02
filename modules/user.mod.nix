@@ -4,7 +4,7 @@
   lib,
   ...
 }: let
-  inherit (lib.attrsets) attrNames attrValues filterAttrs removeAttrs;
+  inherit (lib.attrsets) attrValues removeAttrs;
   inherit (lib.lists) head singleton;
   inherit (lib.strings) hasPrefix;
 
@@ -24,7 +24,9 @@ in let
   # which darwin evaluation would not provide. Everything except `default`
   # itself composes the runtime, including `commonModules` like `unfree`.
   default = {
-    imports = attrValues (removeAttrs inputs.self.darwinModules ["default"]);
+    imports = inputs.self.darwinModules
+      |> (mods: removeAttrs mods ["default"])
+      |> attrValues;
   };
 
   home = {
@@ -47,20 +49,15 @@ in let
     };
   };
 
-  primary-user = {
-    config,
-    lib,
-    ...
-  }: let
+  primary-user = {config, lib, ...}: let
     inherit (lib.attrsets) attrNames filterAttrs;
     inherit (lib.lists) head;
     inherit (lib.strings) hasPrefix;
-
-    users =
-      filterAttrs (_: {home, ...}: home != null && hasPrefix "/Users/" home)
-      config.users.users;
   in {
-    system.primaryUser = head (attrNames users);
+    system.primaryUser = config.users.users
+      |> filterAttrs (_: {home, ...}: home != null && hasPrefix "/Users/" home)
+      |> attrNames
+      |> head;
   };
 
   # ---- NixOS (Linux) counterparts: same home features, Linux paths
@@ -86,7 +83,9 @@ in let
   };
 
   nixos = {
-    imports = attrValues (removeAttrs inputs.self.nixosModules ["default"]);
+    imports = inputs.self.nixosModules
+      |> (mods: removeAttrs mods ["default"])
+      |> attrValues;
   };
 in {
   flake.darwinModules.default = default;

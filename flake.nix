@@ -29,8 +29,9 @@
     in {
       # Dendritic Pattern: auto-import every `*.mod.nix` top-level module.
       imports =
-        filter (hasSuffix ".mod.nix") (listFilesRecursive ./.)
-        ++ singleton inputs.flake-parts.flakeModules.modules;
+        listFilesRecursive ./.
+        |> filter (hasSuffix ".mod.nix")
+        |> (imports: imports ++ singleton inputs.flake-parts.flakeModules.modules);
 
       # Which systems perSystem is instantiated for (formatter, devShells).
       systems = ["aarch64-darwin" "x86_64-linux"];
