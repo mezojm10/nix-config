@@ -1,5 +1,5 @@
 {...}: {
-  flake.modules.homeManager.shell = {pkgs, ...}: {
+  flake.homeModules.shell = {pkgs, ...}: {
     # Shell aliases
     home.shellAliases = {
       cat = "bat";

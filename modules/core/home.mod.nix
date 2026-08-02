@@ -1,9 +1,5 @@
-{lib, ...}: {
-  flake.modules.homeManager.core = {
-    config,
-    lib,
-    ...
-  }: {
+{...}: {
+  flake.homeModules.home = {config, ...}: {
     home.stateVersion = "26.05";
 
     # Doom's CLI lives in its own checkout, outside the nix store, so nothing

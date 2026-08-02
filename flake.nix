@@ -1,5 +1,15 @@
 {
-  description = "Mazin's nix-darwin system flake";
+  nixConfig = {
+    builders-use-substitutes = true;
+    experimental-features = ["flakes" "nix-command" "pipe-operators"];
+    flake-registry = "";
+    substituters = ["https://nix-community.cachix.org"];
+    trusted-public-keys = [
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+    ];
+    trusted-users = ["@wheel"];
+    warn-dirty = false;
+  };
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
@@ -8,27 +18,28 @@
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     flake-parts.url = "github:hercules-ci/flake-parts";
-    import-tree.url = "github:denful/import-tree";
   };
 
   outputs = inputs:
-    inputs.flake-parts.lib.mkFlake {inherit inputs;} {
+    inputs.flake-parts.lib.mkFlake {inherit inputs;}
+    ({lib, ...}: let
+      inherit (lib.filesystem) listFilesRecursive;
+      inherit (lib.lists) filter singleton;
+      inherit (lib.strings) hasSuffix;
+    in {
+      # Dendritic Pattern: auto-import every `*.mod.nix` top-level module.
+      imports =
+        filter (hasSuffix ".mod.nix") (listFilesRecursive ./.)
+        ++ singleton inputs.flake-parts.flakeModules.modules;
+
       # Which systems perSystem is instantiated for (formatter, devShells).
       systems = ["aarch64-darwin" "x86_64-linux"];
-      # Auto-import every top-level module under ./modules.
-      # All feature files live there as flake-parts modules.
-      imports = [
-        (inputs.import-tree ./modules)
-        # Enable the flake.modules.<class>.<aspect> storage for deferred modules.
-        inputs.flake-parts.flakeModules.modules
-      ];
 
-      # Per-system flake outputs kept here since they aren't features.
       perSystem = {pkgs, ...}: {
         formatter = pkgs.alejandra;
         devShells = {
           default = pkgs.mkShell {buildInputs = [pkgs.nixd];};
         };
       };
-    };
+    });
 }

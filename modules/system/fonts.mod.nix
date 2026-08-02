@@ -1,5 +1,5 @@
 {...}: {
-  flake.modules.darwin.fonts = {pkgs, ...}: {
+  flake.darwinModules.fonts = {pkgs, ...}: {
     fonts.packages = with pkgs; [
       iosevka
       jetbrains-mono

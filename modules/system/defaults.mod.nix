@@ -1,5 +1,5 @@
 {...}: {
-  flake.modules.darwin.defaults = {...}: {
+  flake.darwinModules.defaults = {...}: {
     programs.zsh.enable = true;
 
     # Darwin system settings

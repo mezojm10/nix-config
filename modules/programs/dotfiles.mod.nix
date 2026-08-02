@@ -1,5 +1,5 @@
 {...}: {
-  flake.modules.homeManager.dotfiles = {config, ...}: {
+  flake.homeModules.dotfiles = {config, ...}: {
     home.file = {
       ".config/aerospace" = {
         source = ../../dotfiles/aerospace;

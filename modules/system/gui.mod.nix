@@ -1,14 +1,6 @@
-{lib, ...}: {
-  flake.modules.darwin.gui = {
-    pkgs,
-    lib,
-    ...
-  }: {
-    # Allow specific unfree packages on a per-package basis.
-    nixpkgs.config.allowUnfreePredicate = pkg:
-      builtins.elem (lib.getName pkg) [
-        "raycast"
-      ];
+{...}: {
+  flake.darwinModules.gui = {pkgs, ...}: {
+    nixpkgs.allowedUnfreePackages = ["raycast"];
 
     # GUI applications. nix-darwin rsyncs these into /Applications/Nix Apps as
     # real bundles (not symlinks), so Spotlight and Raycast index them.

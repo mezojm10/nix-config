@@ -1,5 +1,5 @@
 {...}: {
-  flake.modules.homeManager.editors = {config, ...}: {
+  flake.homeModules.editors = {config, ...}: {
     programs.helix = {
       enable = true;
       defaultEditor = true;
