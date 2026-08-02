@@ -62,8 +62,37 @@ in let
   in {
     system.primaryUser = head (attrNames users);
   };
+
+  # ---- NixOS (Linux) counterparts: same home features, Linux paths
+
+  nixos-home = {
+    imports = singleton inputs.home-manager.nixosModules.home-manager;
+
+    users.users.${user} = {
+      isNormalUser = true;
+      home = "/home/${user}";
+    };
+
+    home-manager.useGlobalPkgs = false;
+    home-manager.useUserPackages = true;
+    home-manager.backupFileExtension = "hm-backup";
+    home-manager.users.${user} = {
+      imports = homeModules;
+      home = {
+        username = user;
+        homeDirectory = "/home/${user}";
+      };
+    };
+  };
+
+  nixos = {
+    imports = attrValues (removeAttrs inputs.self.nixosModules ["default"]);
+  };
 in {
   flake.darwinModules.default = default;
   flake.darwinModules.home = home;
   flake.darwinModules.primary-user = primary-user;
+
+  flake.nixosModules.default = nixos;
+  flake.nixosModules.home = nixos-home;
 }

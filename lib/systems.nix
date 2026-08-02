@@ -1,6 +1,6 @@
-{inputs}: {
-  # Build a darwin system whose root is the `default` aggregate; a host just
-  # supplies host-specific overrides.
+{inputs}: let
+  inherit (inputs.nixpkgs.lib) nixosSystem;
+in {
   darwinSystem = hostName: module: {
     flake.darwinConfigurations.${hostName} = inputs.darwin.lib.darwinSystem {
       system = "aarch64-darwin";
@@ -17,9 +17,9 @@
     };
   };
 
-  # Generic NixOS host builder (used for the non-darwin systems in Phase 2).
-  nixosSystem = self: hostName: module: {
-    flake.nixosConfigurations.${hostName} = self.nixosSystem {
+  # Generic NixOS host builder, rooted at the nixos `default` aggregate.
+  nixosSystem = hostName: module: {
+    flake.nixosConfigurations.${hostName} = nixosSystem {
       modules = [
         inputs.self.nixosModules.default
 

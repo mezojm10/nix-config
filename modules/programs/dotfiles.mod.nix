@@ -1,12 +1,20 @@
-{...}: {
-  flake.homeModules.dotfiles = {config, ...}: {
+{
+  flake.homeModules.dotfiles = {
+    config,
+    lib,
+    osConfig,
+    ...
+  }: let
+    inherit (lib.modules) mkIf;
+    isDarwin = osConfig.nixpkgs.hostPlatform.isDarwin;
+  in {
     home.file = {
-      ".config/aerospace" = {
+      ".config/aerospace" = mkIf isDarwin {
         source = ../../dotfiles/aerospace;
       };
     };
 
-    programs.aerospace = {
+    programs.aerospace = mkIf isDarwin {
       enable = true;
     };
 
