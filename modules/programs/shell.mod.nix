@@ -28,6 +28,10 @@
       enableGitIntegration = true;
     };
 
+    programs.git = {
+      enable = true;
+    };
+
     programs.lazygit = {
       enable = true;
       settings = {
