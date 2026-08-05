@@ -7,11 +7,11 @@
     home.packages = with pkgs; [
       _1password-cli
       awscli2
+      devenv
       fd
       gh
       nodejs
       ripgrep
-      secretspec
     ];
   };
 }
