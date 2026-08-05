@@ -5,8 +5,7 @@
   ...
 }: let
   inherit (lib.attrsets) attrValues removeAttrs;
-  inherit (lib.lists) head singleton;
-  inherit (lib.strings) hasPrefix;
+  inherit (lib.lists) singleton;
 
   # The darwin account name. It must stay a literal attrs key -- home-manager's
   # per-user config is keyed by name, which cannot be derived at eval time.
