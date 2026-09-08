@@ -8,7 +8,7 @@
     # NOT MANAGED HERE -- install these by hand from the vendor .dmg/.pkg.
     #   Visual Studio Code, Bruno, Google Chrome, Discord, Firefox, Stremio.
     environment.systemPackages = with pkgs; [
-      emacs30
+      emacs-macport
       maccy
       raycast
       vlc-bin

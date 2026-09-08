@@ -1,5 +1,12 @@
 {...}: {
-  flake.homeModules.shell = {pkgs, ...}: {
+  flake.homeModules.shell = {
+    config,
+    lib,
+    pkgs,
+    ...
+  }: let
+    inherit (lib.trivial) readFile;
+  in {
     # Shell aliases
     home.shellAliases = {
       cat = "bat";
@@ -66,8 +73,15 @@
 
     programs.nushell = {
       enable = true;
+
+      # Bitwarden's SSH agent socket. Must be absolute -- `environmentVariables`
+      # emits a quoted nu string, and nothing expands `~` in SSH_AUTH_SOCK.
+      environmentVariables = {
+        SSH_AUTH_SOCK = "${config.home.homeDirectory}/.bitwarden-ssh-agent.sock";
+      };
+
       # Completions for jj
-      extraConfig = builtins.readFile ../../dotfiles/nushell/jj-completions.nu;
+      extraConfig = readFile ../../dotfiles/nushell/jj-completions.nu;
     };
 
     programs.starship = {
