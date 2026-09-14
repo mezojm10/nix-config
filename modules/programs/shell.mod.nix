@@ -93,15 +93,6 @@
       };
     };
 
-    programs.zellij = {
-      enable = true;
-      enableZshIntegration = true;
-      attachExistingSession = true;
-      settings = {
-        default_shell = "nu";
-      };
-    };
-
     programs.zoxide = {
       enable = true;
       enableNushellIntegration = true;
