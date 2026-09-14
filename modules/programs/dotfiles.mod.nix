@@ -10,7 +10,7 @@
   in {
     home.file = {
       ".config/aerospace" = mkIf isDarwin {
-        source = ../../dotfiles/aerospace;
+        source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/nix/dotfiles/aerospace";
       };
     };
 
