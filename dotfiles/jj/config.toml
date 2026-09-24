@@ -13,6 +13,12 @@ default-command = ["log", "--no-pager"]
 [--scope.user]
 email = "mazin.abdallah@alsavvy.co"
 
+# override user.email if the repository is located under ~/workspace/systech
+[[--scope]]
+--when.repositories = ["~/workspace/systech"]
+[--scope.user]
+email = "mazin.abdallah@systech-digital.com"
+
 # disable pagination for `jj status`, use `delta` for `jj diff` and `jj show`
 [[--scope]]
 --when.commands = ["status"]
