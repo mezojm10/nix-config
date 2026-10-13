@@ -28,3 +28,6 @@ paginate = "never"
 --when.commands = ["diff", "show"]
 [--scope.ui]
 pager = "delta"
+
+[revsets]
+bookmark-advance-to = "heads(::@ ~ empty())"
