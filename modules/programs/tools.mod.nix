@@ -9,6 +9,7 @@
       devenv
       fd
       gh
+      mosh
       nodejs
       ripgrep
     ];
