@@ -68,7 +68,7 @@ in let
     users.users.${nixosUser} = {
       isNormalUser = true;
       home = "/home/${nixosUser}";
-      extraGroups = ["networkmanager" "wheel"];
+      extraGroups = ["networkmanager" "tss" "wheel"];
     };
 
     home-manager.useGlobalPkgs = false;
