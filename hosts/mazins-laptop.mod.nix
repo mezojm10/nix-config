@@ -28,9 +28,8 @@ in {
       boot.loader.systemd-boot.configurationLimit = 10;
       boot.loader.efi.canTouchEfiVariables = true;
 
-      # Typical laptop set. Compare with `nixos-generate-config --show-hardware-config`
-      # on the laptop and add anything it lists that is missing here.
-      boot.initrd.availableKernelModules = ["nvme" "sd_mod" "thunderbolt" "usb_storage" "usbhid" "xhci_pci"];
+      # From `nixos-generate-config --show-hardware-config` on the laptop.
+      boot.initrd.availableKernelModules = ["ahci" "nvme" "sd_mod" "usb_storage" "usbhid" "xhci_pci"];
       boot.kernelModules = ["kvm-intel"];
 
       hardware.enableRedistributableFirmware = true;
@@ -106,8 +105,8 @@ in {
           offload.enable = true;
           offload.enableOffloadCmd = true;
 
-          # The usual addresses on Comet Lake laptops. Confirm with `lspci` on
-          # the laptop, converting hex to decimal ("01:00.0" -> "PCI:1:0:0").
+          # From `lspci` on the laptop, hex converted to decimal
+          # ("01:00.0" -> "PCI:1:0:0").
           intelBusId = "PCI:0:2:0";
           nvidiaBusId = "PCI:1:0:0";
         };
