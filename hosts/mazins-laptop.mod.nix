@@ -112,5 +112,38 @@ in {
           nvidiaBusId = "PCI:1:0:0";
         };
       };
+
+      # DISPLAYS
+      # Turn the built-in panel off whenever an external monitor is connected,
+      # and back on when it is unplugged. Confirm the panel's name with
+      # `niri msg outputs`. Closing the lid while docked does not suspend,
+      # since logind ignores the lid switch when an external display is present.
+      home-manager.sharedModules = singleton {
+        services.kanshi = {
+          enable = true;
+          settings = [
+            {
+              profile.name = "docked";
+              profile.outputs = [
+                {
+                  criteria = "eDP-1";
+                  status = "disable";
+                }
+                {
+                  criteria = "*";
+                  status = "enable";
+                }
+              ];
+            }
+            {
+              profile.name = "undocked";
+              profile.outputs = singleton {
+                criteria = "eDP-1";
+                status = "enable";
+              };
+            }
+          ];
+        };
+      };
     });
 }
