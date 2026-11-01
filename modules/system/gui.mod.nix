@@ -1,4 +1,12 @@
-{...}: {
+{
+  inputs,
+  lib,
+  ...
+}: let
+  inherit (lib.attrsets) genAttrs;
+  inherit (lib.lists) singleton;
+  inherit (lib.meta) getExe;
+in {
   flake.darwinModules.gui = {pkgs, ...}: {
     nixpkgs.allowedUnfreePackages = ["raycast"];
 
@@ -15,14 +23,36 @@
     ];
   };
 
-  flake.nixosModules.gui = {pkgs, ...}: {
+  flake.nixosModules.gui = {
+    config,
+    pkgs,
+    ...
+  }: {
+    imports = singleton inputs.helium.nixosModules.default;
+
+    # For CLI tools that open URLs (gh, jj, etc.).
+    environment.sessionVariables.BROWSER = getExe config.programs.helium.package;
+
     environment.systemPackages = with pkgs; [
       emacs-pgtk
+      inputs.zen-browser.packages.${stdenv.hostPlatform.system}.default
       kdePackages.ark
       kdePackages.dolphin
       vlc
     ];
 
-    programs.firefox.enable = true;
+    # Default browser for links, via the system-wide mimeapps.list.
+    xdg.mime.defaultApplications =
+      genAttrs [
+        "application/xhtml+xml"
+        "text/html"
+        "x-scheme-handler/about"
+        "x-scheme-handler/http"
+        "x-scheme-handler/https"
+        "x-scheme-handler/unknown"
+      ]
+      (_: "helium.desktop");
+
+    programs.helium.enable = true;
   };
 }
