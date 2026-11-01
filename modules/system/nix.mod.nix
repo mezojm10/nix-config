@@ -4,4 +4,11 @@
     # in the flake's `nixConfig` instead.
     nix.enable = false;
   };
+
+  flake.nixosModules.nix = {...}: {
+    # The flake itself uses `|>`, so rebuilding needs pipe-operators enabled.
+    nix.settings.experimental-features = ["nix-command" "flakes" "pipe-operators"];
+
+    nix.settings.trusted-users = ["@wheel"];
+  };
 }

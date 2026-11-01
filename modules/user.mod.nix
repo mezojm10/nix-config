@@ -7,10 +7,11 @@
   inherit (lib.attrsets) attrValues removeAttrs;
   inherit (lib.lists) singleton;
 
-  # The darwin account name. It must stay a literal attrs key -- home-manager's
+  # The account names. They must stay literal attrs keys -- home-manager's
   # per-user config is keyed by name, which cannot be derived at eval time.
-  # `system.primaryUser` is then derived from that account.
-  user = "mazinabdallah";
+  # On darwin, `system.primaryUser` is then derived from that account.
+  darwinUser = "mazinabdallah";
+  nixosUser = "mazin";
 
   # Every registered home feature, injected into the primary user below. We do
   # this here (not via ncc's `home.extraModules`, which is hjem-only) so the
@@ -29,7 +30,7 @@ in let
   };
 
   home = {
-    users.users.${user}.home = "/Users/${user}";
+    users.users.${darwinUser}.home = "/Users/${darwinUser}";
 
     imports = singleton inputs.home-manager.darwinModules.home-manager;
 
@@ -39,11 +40,11 @@ in let
     home-manager.useUserPackages = true;
     home-manager.backupFileExtension = "hm-backup";
     home-manager.extraSpecialArgs = {inherit inputs;};
-    home-manager.users.${user} = {
+    home-manager.users.${darwinUser} = {
       imports = homeModules;
       home = {
-        username = user;
-        homeDirectory = "/Users/${user}";
+        username = darwinUser;
+        homeDirectory = "/Users/${darwinUser}";
       };
     };
   };
@@ -64,19 +65,20 @@ in let
   nixos-home = {
     imports = singleton inputs.home-manager.nixosModules.home-manager;
 
-    users.users.${user} = {
+    users.users.${nixosUser} = {
       isNormalUser = true;
-      home = "/home/${user}";
+      home = "/home/${nixosUser}";
+      extraGroups = ["networkmanager" "wheel"];
     };
 
     home-manager.useGlobalPkgs = false;
     home-manager.useUserPackages = true;
     home-manager.backupFileExtension = "hm-backup";
-    home-manager.users.${user} = {
+    home-manager.users.${nixosUser} = {
       imports = homeModules;
       home = {
-        username = user;
-        homeDirectory = "/home/${user}";
+        username = nixosUser;
+        homeDirectory = "/home/${nixosUser}";
       };
     };
   };

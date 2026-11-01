@@ -14,4 +14,15 @@
       vlc-bin
     ];
   };
+
+  flake.nixosModules.gui = {pkgs, ...}: {
+    environment.systemPackages = with pkgs; [
+      emacs-pgtk
+      kdePackages.ark
+      kdePackages.dolphin
+      vlc
+    ];
+
+    programs.firefox.enable = true;
+  };
 }

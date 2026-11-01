@@ -1,5 +1,6 @@
 {...}: {
-  flake.darwinModules.fonts = {pkgs, ...}: {
+  # Shared across NixOS and Darwin via commonModules.
+  commonModules.fonts = {pkgs, ...}: {
     fonts.packages = with pkgs; [
       iosevka
       jetbrains-mono

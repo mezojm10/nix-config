@@ -18,4 +18,22 @@
       stateVersion = 6;
     };
   };
+
+  flake.nixosModules.defaults = {pkgs, ...}: {
+    programs.zsh.enable = true;
+    users.defaultUserShell = pkgs.zsh;
+
+    networking.networkmanager.enable = true;
+
+    hardware.bluetooth.enable = true;
+
+    services.pipewire = {
+      enable = true;
+      alsa.enable = true;
+      pulse.enable = true;
+    };
+
+    # Compressed swap in RAM instead of a swap partition.
+    zramSwap.enable = true;
+  };
 }
