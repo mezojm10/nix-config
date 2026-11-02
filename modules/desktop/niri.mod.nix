@@ -34,9 +34,6 @@
     # Battery and power information for the Quickshell bar.
     services.upower.enable = true;
 
-    services.displayManager.sddm = {
-      enable = true;
-      wayland.enable = true;
-    };
+    # The login manager is Airlock on greetd; see `modules/desktop/airlock.mod.nix`.
   };
 }
