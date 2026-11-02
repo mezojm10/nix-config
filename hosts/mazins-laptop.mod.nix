@@ -154,6 +154,22 @@ in {
           enable = true;
           settings = [
             {
+              # The AOC advertises 60 Hz as its preferred mode, so pin the
+              # 144 Hz mode explicitly when it is connected.
+              profile.name = "aoc";
+              profile.outputs = [
+                {
+                  criteria = "eDP-1";
+                  status = "disable";
+                }
+                {
+                  criteria = "PNP(AOC) 24G2W1G4 ATNM81A000199";
+                  status = "enable";
+                  mode = "1920x1080@144Hz";
+                }
+              ];
+            }
+            {
               profile.name = "docked";
               profile.outputs = [
                 {
