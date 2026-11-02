@@ -4,7 +4,8 @@ in {
   # Tailscale, with Tailscale SSH: tailscaled answers SSH on port 22 of the
   # machine's tailnet address and authenticates through the tailnet's identity
   # and ACLs, so no sshd or authorized keys are needed. Log in once with
-  # `sudo tailscale up`.
+  # `sudo tailscale up --ssh`: a plain `tailscale up` resets the `--ssh` that
+  # `extraSetFlags` applied when the daemon started.
   flake.nixosModules.tailscale = {...}: {
     services.tailscale = {
       enable = true;
