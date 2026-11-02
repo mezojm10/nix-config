@@ -35,5 +35,13 @@
         "dataUnits": "Decimal",
         "sensorUnits": "Celsius",
         "weatherUnits": "Celsius"
+    },
+    "session": {
+        "commands": {
+            "hibernate": ["suspend"]
+        },
+        "icons": {
+            "hibernate": "bedtime"
+        }
     }
 }

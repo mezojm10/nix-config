@@ -26,6 +26,7 @@ make rebasing onto a newer upstream checkout manageable.
 | `modules/areapicker/Picker.qml` | Drops `hyprctl cursorpos` (niri does not expose the pointer) and uses the shell's own border config instead of Hyprland options. |
 | `modules/windowinfo/*` | Hyprland types replaced by `var`. |
 | `daemons/GameMode.qml` | Stubs out Hyprland option changes; toast wording adjusted. |
+| `plugin/src/Caelestia/Services/sessionmanager.cpp` | `logout()` runs `niri msg action quit --skip-confirmation` instead of terminating the logind session, which does not stop niri under `niri-session`. |
 
 ## Local additions (not upstream)
 
@@ -50,3 +51,6 @@ make rebasing onto a newer upstream checkout manageable.
 - No window tags; `bar.workspaces.ignoredTags` has no effect.
 - Blur behind the bar/drawers is not applied: Caelestia draws all panels on one
   full-screen layer surface, which niri would blur as a whole.
+- `niri-session` runs the compositor as a systemd user service outside the
+  logind session scope, so logind calls such as `Terminate` do not stop the
+  graphical session. Logout quits niri instead.

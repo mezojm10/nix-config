@@ -7,6 +7,7 @@
 #include <qdbuspendingreply.h>
 #include <qdbusreply.h>
 #include <qloggingcategory.h>
+#include <qprocess.h>
 
 #include "core/toaster.hpp"
 #include "util/i18n.hpp"
@@ -94,7 +95,12 @@ bool SessionManager::exec(const QStringList& command) {
 }
 
 void SessionManager::logout() {
-    callSession(u"Terminate"_s);
+    // Under niri the compositor runs as a systemd user service, outside the
+    // logind session scope. Terminating the logind session therefore leaves
+    // niri (and this shell) running on a black screen. Quitting niri is what
+    // actually ends the graphical session and returns to the greeter.
+    if (!QProcess::startDetached(u"niri"_s, { u"msg"_s, u"action"_s, u"quit"_s, u"--skip-confirmation"_s }))
+        qCWarning(lcSessionManager) << "Failed to start niri to log out";
 }
 
 void SessionManager::suspend() {
