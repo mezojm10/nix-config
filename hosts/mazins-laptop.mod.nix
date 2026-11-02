@@ -137,6 +137,13 @@ in {
       hardware.i2c.enable = true;
 
       # DISPLAYS
+      # DRM numbers connectors of the same type globally across GPUs in the
+      # order their drivers register. The dGPU has an eDP connector of its own,
+      # so when nvidia-drm wins the race the panel comes up as eDP-2 and no
+      # kanshi profile below matches. Loading i915 in the initrd registers the
+      # iGPU first, keeping the panel at eDP-1.
+      boot.initrd.kernelModules = singleton "i915";
+
       # Turn the built-in panel off whenever an external monitor is connected,
       # and back on when it is unplugged. Confirm the panel's name with
       # `niri msg outputs`. Closing the lid while docked does not suspend,
