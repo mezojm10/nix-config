@@ -17,7 +17,7 @@ in {
       inherit (lib) toString;
     in {
       nixpkgs.hostPlatform = "x86_64-linux";
-      nixpkgs.allowedUnfreePackages = ["nvidia-settings" "nvidia-x11"];
+      nixpkgs.allowedUnfreePackages = ["nvidia-settings" "nvidia-x11" "stremio-linux-shell"];
 
       system.stateVersion = "26.05";
 
@@ -88,6 +88,11 @@ in {
       # Battery conservation mode (the EC holds the charge at ~60% to slow wear)
       # is toggled from System Settings > Power Management, through powerdevil's
       # ideapad_acpi support. The EC keeps the setting across reboots.
+
+      # APPLICATIONS
+      # nixpkgs dropped `stremio` along with qt5 webengine; this is its
+      # replacement Linux shell.
+      environment.systemPackages = singleton pkgs.stremio-linux-shell;
 
       # GRAPHICS
       # VA-API video decoding on the Intel iGPU, which renders by default.
