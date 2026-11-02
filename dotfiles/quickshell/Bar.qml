@@ -86,6 +86,33 @@ PanelWindow {
         }
     }
 
+    // CPU and memory counters, sampled together so the CPU percentage spans
+    // the gap between two reads instead of a separate sleep.
+    Process {
+        id: statsProcess
+
+        command: [
+            "sh", "-c",
+            "grep '^cpu ' /proc/stat; grep --extended-regexp '^(MemTotal|MemAvailable):' /proc/meminfo"
+        ]
+
+        stdout: StdioCollector {
+            onStreamFinished: bar.updateStats(text)
+        }
+    }
+
+    Timer {
+        interval: 2000
+        running: true
+        repeat: true
+        triggeredOnStart: true
+
+        onTriggered: {
+            if (!statsProcess.running)
+                statsProcess.running = true;
+        }
+    }
+
     Rectangle {
         anchors.fill: parent
         radius: 12
@@ -264,6 +291,53 @@ PanelWindow {
             spacing: 12
 
             RowLayout {
+                spacing: 10
+                Layout.alignment: Qt.AlignVCenter
+
+                RowLayout {
+                    spacing: 4
+                    Layout.alignment: Qt.AlignVCenter
+
+                    Text {
+                        text: "\u{f0ee0}"
+                        color: Theme.blue
+                        font.family: Theme.iconFont
+                        font.pixelSize: 14
+                        Layout.alignment: Qt.AlignVCenter
+                    }
+
+                    Text {
+                        text: bar.cpuUsage + "%"
+                        color: Theme.fgDim
+                        font.family: Theme.font
+                        font.pixelSize: 12
+                        Layout.alignment: Qt.AlignVCenter
+                    }
+                }
+
+                RowLayout {
+                    spacing: 4
+                    Layout.alignment: Qt.AlignVCenter
+
+                    Text {
+                        text: "\u{f035b}"
+                        color: Theme.purple
+                        font.family: Theme.iconFont
+                        font.pixelSize: 14
+                        Layout.alignment: Qt.AlignVCenter
+                    }
+
+                    Text {
+                        text: bar.memUsage + "%"
+                        color: Theme.fgDim
+                        font.family: Theme.font
+                        font.pixelSize: 12
+                        Layout.alignment: Qt.AlignVCenter
+                    }
+                }
+            }
+
+            RowLayout {
                 spacing: 4
                 Layout.alignment: Qt.AlignVCenter
 
@@ -376,6 +450,48 @@ PanelWindow {
                 }
             }
         }
+    }
+
+    // ------------------------------------------------------- system stats
+
+    property int cpuUsage: 0
+    property int memUsage: 0
+    property var previousCpu: null
+
+    function updateStats(text) {
+        const lines = text.trim().split("\n");
+        if (lines.length < 1)
+            return;
+
+        // user nice system idle iowait irq softirq steal
+        const fields = lines[0].trim().split(/\s+/).slice(1, 9).map(Number);
+        const total = fields.reduce((sum, value) => sum + value, 0);
+        const idle = fields[3] + fields[4];
+
+        if (previousCpu !== null) {
+            const totalDelta = total - previousCpu.total;
+            const idleDelta = idle - previousCpu.idle;
+            if (totalDelta > 0)
+                cpuUsage = Math.round(100 * (totalDelta - idleDelta) / totalDelta);
+        }
+
+        previousCpu = {total: total, idle: idle};
+
+        let totalMemory = 0;
+        let availableMemory = 0;
+
+        for (const line of lines.slice(1)) {
+            const match = line.match(/^(MemTotal|MemAvailable):\s+(\d+)/);
+            if (!match)
+                continue;
+            if (match[1] === "MemTotal")
+                totalMemory = Number(match[2]);
+            else
+                availableMemory = Number(match[2]);
+        }
+
+        if (totalMemory > 0)
+            memUsage = Math.round(100 * (totalMemory - availableMemory) / totalMemory);
     }
 
     // ------------------------------------------------------------- volume
