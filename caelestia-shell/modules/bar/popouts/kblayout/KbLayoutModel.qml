@@ -8,8 +8,8 @@ import Caelestia.Config
 import Caelestia.I18n
 
 // Niri port: layouts are read from `niri msg -j keyboard-layouts`, which only
-// reports names and the active index. Niri can only cycle layouts, so selecting
-// a specific one is emulated by cycling the required number of times.
+// reports names and the active index. Selecting a layout passes its index to
+// `niri msg action switch-layout`.
 
 Item {
     id: model
@@ -34,9 +34,7 @@ Item {
         if (count < 2 || idx === from)
             return;
 
-        const steps = (idx - from + count) % count;
-        for (let i = 0; i < steps; i++)
-            Quickshell.execDetached(["niri", "msg", "action", "switch-layout"]);
+        Quickshell.execDetached(["niri", "msg", "action", "switch-layout", String(idx)]);
 
         activeIndex = idx;
         activeLabel = idx < count ? layoutsModel.get(idx).label : "";

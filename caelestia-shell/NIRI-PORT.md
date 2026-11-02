@@ -22,7 +22,7 @@ make rebasing onto a newer upstream checkout manageable.
 | `modules/drawers/ContentWindow.qml` | Uses `SoftFocusGrab` and `WlrKeyboardFocus.Exclusive` while a drawer is open. |
 | `modules/bar/popouts/Wrapper.qml` | Uses `SoftFocusGrab`; drops the Hyprland import. |
 | `modules/bar/components/workspaces/*` | Hyprland-specific types replaced by `var`; behaviour unchanged. |
-| `modules/bar/popouts/kblayout/KbLayoutModel.qml` | Reads `niri msg -j keyboard-layouts`; selection cycles with `niri msg action switch-layout`. |
+| `modules/bar/popouts/kblayout/KbLayoutModel.qml` | Reads `niri msg -j keyboard-layouts`; selection runs `niri msg action switch-layout <index>`. |
 | `modules/areapicker/Picker.qml` | Drops `hyprctl cursorpos` (niri does not expose the pointer) and uses the shell's own border config instead of Hyprland options. |
 | `modules/windowinfo/*` | Hyprland types replaced by `var`. |
 | `daemons/GameMode.qml` | Stubs out Hyprland option changes; toast wording adjusted. |
