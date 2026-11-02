@@ -105,6 +105,11 @@ in {
       hardware.nvidia = {
         open = true;
 
+        # The production driver's NVENC API (13.0) is older than the one
+        # nixpkgs' FFmpeg is built against (13.1), so gpu-screen-recorder cannot
+        # hardware-encode monitors attached to the dGPU (the HDMI port).
+        package = config.boot.kernelPackages.nvidiaPackages.latest;
+
         modesetting.enable = true;
 
         # Power the dGPU down when idle.
