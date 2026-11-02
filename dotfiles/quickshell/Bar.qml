@@ -366,7 +366,7 @@ PanelWindow {
                         if (button === Qt.MiddleButton)
                             Quickshell.execDetached(["wpctl", "set-mute", "@DEFAULT_AUDIO_SINK@", "toggle"]);
                         else
-                            Quickshell.execDetached(["pavucontrol"]);
+                            Quickshell.execDetached(["systemsettings", "kcm_pulseaudio"]);
                     }
                 }
             }

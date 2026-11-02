@@ -6,7 +6,6 @@
       cliphist
       fuzzel
       ghostty
-      pavucontrol
       playerctl
       polkit_gnome
       swaylock

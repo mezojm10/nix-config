@@ -164,7 +164,7 @@ window-rule {
 
 // Utility windows that are awkward as tiles.
 window-rule {
-    match app-id=r#"^(org\.pulseaudio\.pavucontrol|com\.obsproject\.Studio|org\.gnome\.Calculator|org\.gnome\.Disks|gparted)$"#
+    match app-id=r#"^(com\.obsproject\.Studio|org\.gnome\.Calculator|org\.gnome\.Disks|gparted)$"#
     open-floating true
 }
 

@@ -1,5 +1,6 @@
 {lib, ...}: let
-  inherit (lib.meta) getExe getExe';
+  inherit (lib.lists) singleton;
+  inherit (lib.meta) getExe;
   inherit (lib.modules) mkIf;
 in {
   flake.homeModules.rice = {
@@ -63,7 +64,6 @@ in {
       home.packages = with pkgs; [
         brightnessctl
         libnotify
-        pavucontrol
         playerctl
         polkit_gnome
         wlogout
@@ -264,16 +264,12 @@ in {
           lock = "${getExe pkgs.swaylock} --daemonize";
         };
 
-        timeouts = [
-          {
-            timeout = 300;
-            command = "${getExe pkgs.swaylock} --daemonize";
-          }
-          {
-            timeout = 600;
-            command = "${getExe' pkgs.systemd "systemctl"} suspend";
-          }
-        ];
+        # Locking only. Idle suspend is set in System Settings > Power
+        # Management (powerdevil).
+        timeouts = singleton {
+          timeout = 300;
+          command = "${getExe pkgs.swaylock} --daemonize";
+        };
       };
 
       programs.quickshell = {
