@@ -20,6 +20,8 @@
         }
     },
     "launcher": {
+        "actionPrefix": "!",
+        "enabled": true,
         "showOnHover": false,
         "useFuzzy": {
             "actions": true,
@@ -27,7 +29,8 @@
             "schemes": true,
             "variants": true,
             "wallpapers": true
-        }
+        },
+        "vimKeybinds": true
     },
     "services": {
         "audioIncrement": 0.05,
@@ -38,7 +41,9 @@
     },
     "session": {
         "commands": {
-            "hibernate": ["suspend"]
+            "hibernate": [
+                "suspend"
+            ]
         },
         "icons": {
             "hibernate": "bedtime"
@@ -46,5 +51,10 @@
     },
     "sidebar": {
         "showOnHover": true
+    },
+    "utilities": {
+        "toasts": {
+            "nowPlaying": true
+        }
     }
 }
