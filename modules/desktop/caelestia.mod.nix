@@ -21,6 +21,9 @@ in {
         enable = true;
         cli.enable = true;
 
+        # The scheme's Hyprland fragment has nowhere to go under niri.
+        cli.settings.theme.enableHypr = false;
+
         systemd = {
           enable = true;
           target = "graphical-session.target";

@@ -12,6 +12,7 @@ import qs.modules.areapicker
 import qs.modules.background
 import qs.modules.drawers
 import qs.modules.lock
+import qs.modules.polkit
 import qs.daemons
 
 ShellRoot {
@@ -47,6 +48,8 @@ ShellRoot {
     Lock {
         id: lock
     }
+
+    Polkit {}
 
     // Daemons
     Shortcuts {}

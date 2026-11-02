@@ -6,7 +6,6 @@
       cliphist
       ghostty
       playerctl
-      polkit_gnome
       swaylock
       wl-clipboard
 
@@ -20,6 +19,14 @@
       # File choosers go through the GTK portal instead of pulling in Nautilus.
       useNautilus = false;
     };
+
+    # The agent itself is the Caelestia shell's polkit module; only the daemon
+    # needs to be enabled here.
+    security.polkit.enable = true;
+
+    # Lets caelestia-cli write the GNOME interface keys that GTK apps and the
+    # desktop portal read (theme, colour scheme and icon theme).
+    programs.dconf.enable = true;
 
     # swaylock cannot verify the password to unlock without a PAM service.
     security.pam.services.swaylock = {};

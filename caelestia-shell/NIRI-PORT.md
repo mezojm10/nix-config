@@ -34,6 +34,10 @@ make rebasing onto a newer upstream checkout manageable.
   launcher, opened with `caelestia-shell ipc call drawers clipboard`
   (`Super+Shift+C`). Image entries are decoded into
   `~/.cache/caelestia/cliphist` for thumbnails.
+- `modules/polkit/Polkit.qml`: a polkit authentication agent and password
+  dialog backed by `Quickshell.Services.Polkit`. It registers with polkitd on
+  startup and replaces `polkit-gnome-authentication-agent-1` from the niri
+  config.
 - `components/ScreenState.qml` + `modules/launcher/Content.qml`: `launcherQuery`,
   used to prefill the search bar when a drawer opens.
 

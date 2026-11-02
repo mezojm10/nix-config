@@ -10,8 +10,8 @@ in {
     ...
   }: {
     config = mkIf pkgs.stdenv.hostPlatform.isLinux {
-      # Tokyo Night GTK theme. The `storm` tweak is the closest match to the
-      # night palette used by niri, the bar, and Ghostty.
+      # caelestia-cli writes ~/.config/gtk-{3,4}.0/gtk.css with the active
+      # scheme's colours on top of adw-gtk3, so GTK apps follow the shell.
       gtk = {
         enable = true;
 
@@ -20,13 +20,11 @@ in {
           size = 11;
         };
 
+        colorScheme = "dark";
+
         theme = {
-          name = "Tokyonight-Dark-Storm";
-          package = pkgs.tokyonight-gtk-theme.override {
-            colorVariants = ["dark"];
-            themeVariants = ["default"];
-            tweakVariants = ["storm"];
-          };
+          name = "adw-gtk3-dark";
+          package = pkgs.adw-gtk3;
         };
 
         iconTheme = {
@@ -63,13 +61,8 @@ in {
 
       home.packages = with pkgs; [
         brightnessctl
-
-        # The Breeze widget style and the Breeze Dark color scheme.
-        kdePackages.breeze
-
         libnotify
         playerctl
-        polkit_gnome
       ];
 
       # niri's screenshot UI writes here and does not create the directory.
@@ -77,15 +70,21 @@ in {
         run mkdir -p "$HOME/Pictures/Screenshots"
       '';
 
-      # KDE's platform theme: the Breeze style with Breeze Dark colors (the
-      # color groups come from the system kdeglobals that kde-settings.mod.nix
-      # installs). No `style.name`, because the QT_STYLE_OVERRIDE it
-      # sets also becomes the Qt Quick Controls style and crashes Kirigami
-      # apps such as System Settings.
+      # qtengine reads the KColorScheme and widget style that caelestia-cli
+      # writes to ~/.config/qtengine on every scheme change, so Qt apps follow
+      # the shell. No `style.name`, because the QT_STYLE_OVERRIDE it sets also
+      # becomes the Qt Quick Controls style and crashes Kirigami apps such as
+      # System Settings.
       qt = {
         enable = true;
-        platformTheme.name = "kde";
 
+        platformTheme = {
+          name = "qtengine";
+          package = [pkgs.qtengine pkgs.darkly];
+        };
+
+        # KDE apps read fonts and icons from kdeglobals; qtengine supplies their
+        # palette from the KColorScheme caelestia-cli writes.
         kde.settings.kdeglobals = {
           General.ColorScheme = "BreezeDark";
           General.font = "Inter,11,-1,5,400,0,0,0,0,0,0,0,0,0,0,1";
