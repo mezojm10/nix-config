@@ -8,25 +8,36 @@ import Quickshell.Services.Mpris
 import Quickshell.Services.Pipewire
 import Quickshell.Services.SystemTray
 import Quickshell.Services.UPower
+import Quickshell.Networking
+import Quickshell.Bluetooth
 import "Theme.js" as Theme
 
 PanelWindow {
     id: bar
 
     property var modelData
+    property var shellState
     property var workspaces: []
 
+    readonly property string screenName: screen ? screen.name : ""
+
     readonly property var visibleWorkspaces: workspaces
-        .filter(workspace => workspace.output === screen.name)
+        .filter(workspace => workspace.output === screenName)
         .sort((a, b) => a.idx - b.idx)
-    readonly property var focusedWorkspace: {
-        for (const workspace of visibleWorkspaces)
-            if (workspace.is_focused)
-                return workspace;
-        return null;
-    }
 
     readonly property var player: Mpris.players.values.length > 0 ? Mpris.players.values[0] : null
+    readonly property bool hasMedia: player !== null
+
+    readonly property int notificationCount: shellState
+        ? shellState.notificationHistory.length
+        : 0
+
+    readonly property bool controlCenterOpen: !!shellState
+        && shellState.quickSettingsOpen
+        && shellState.quickSettingsScreen === screenName
+
+    readonly property var bluetoothAdapter: Bluetooth.defaultAdapter
+    readonly property bool bluetoothOn: bluetoothAdapter ? bluetoothAdapter.enabled : false
 
     anchors {
         top: true
@@ -57,7 +68,12 @@ PanelWindow {
     }
 
     PwObjectTracker {
-        objects: [Pipewire.defaultAudioSink]
+        objects: [Pipewire.defaultAudioSink, Pipewire.defaultAudioSource]
+    }
+
+    IdleInhibitor {
+        window: bar
+        enabled: bar.shellState ? bar.shellState.caffeine : false
     }
 
     Process {
@@ -85,33 +101,6 @@ PanelWindow {
         onTriggered: {
             if (!workspacesProcess.running)
                 workspacesProcess.running = true;
-        }
-    }
-
-    // CPU and memory counters, sampled together so the CPU percentage spans
-    // the gap between two reads instead of a separate sleep.
-    Process {
-        id: statsProcess
-
-        command: [
-            "sh", "-c",
-            "grep '^cpu ' /proc/stat; grep --extended-regexp '^(MemTotal|MemAvailable):' /proc/meminfo"
-        ]
-
-        stdout: StdioCollector {
-            onStreamFinished: bar.updateStats(text)
-        }
-    }
-
-    Timer {
-        interval: 2000
-        running: true
-        repeat: true
-        triggeredOnStart: true
-
-        onTriggered: {
-            if (!statsProcess.running)
-                statsProcess.running = true;
         }
     }
 
@@ -148,12 +137,12 @@ PanelWindow {
             Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
             spacing: 10
 
-            Text {
-                text: "\u{f313}"
-                color: Theme.blue
-                font.family: Theme.iconFont
-                font.pixelSize: 17
-                Layout.alignment: Qt.AlignVCenter
+            BarButton {
+                glyph: "\u{f06d}"
+                glyphColor: Theme.blue
+                iconSize: 16
+
+                onClicked: Quickshell.execDetached(["fuzzel"])
             }
 
             Rectangle {
@@ -219,67 +208,13 @@ PanelWindow {
 
         // ---------------------------------------------------------- center
 
-        RowLayout {
+        Text {
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            spacing: 12
-
-            RowLayout {
-                visible: bar.player !== null
-                    && (bar.player.trackTitle !== "" || bar.player.trackArtist !== "")
-                spacing: 6
-
-                Text {
-                    text: bar.player && bar.player.isPlaying ? "\u{f04b}" : "\u{f04c}"
-                    color: Theme.magenta
-                    font.family: Theme.iconFont
-                    font.pixelSize: 12
-                    Layout.alignment: Qt.AlignVCenter
-                }
-
-                Text {
-                    Layout.maximumWidth: 240
-                    text: bar.player
-                        ? (bar.player.trackTitle || "Unknown track")
-                            + (bar.player.trackArtist ? "  ·  " + bar.player.trackArtist : "")
-                        : ""
-                    color: Theme.fgDim
-                    font.family: Theme.font
-                    font.pixelSize: 12
-                    elide: Text.ElideRight
-                    Layout.alignment: Qt.AlignVCenter
-                }
-
-                TapHandler {
-                    acceptedButtons: Qt.LeftButton
-                    onTapped: if (bar.player) bar.player.togglePlaying()
-                }
-            }
-
-            Rectangle {
-                visible: bar.player !== null
-                    && (bar.player.trackTitle !== "" || bar.player.trackArtist !== "")
-                width: 1
-                height: 14
-                color: Theme.alpha(Theme.surfaceAlt, 0.8)
-                Layout.alignment: Qt.AlignVCenter
-            }
-
-            Text {
-                text: Qt.formatDateTime(clock.date, "ddd dd MMM")
-                color: Theme.comment
-                font.family: Theme.font
-                font.pixelSize: 12
-                Layout.alignment: Qt.AlignVCenter
-            }
-
-            Text {
-                text: Qt.formatDateTime(clock.date, "HH:mm")
-                color: Theme.fg
-                font.family: Theme.font
-                font.pixelSize: 13
-                font.bold: true
-                Layout.alignment: Qt.AlignVCenter
-            }
+            text: Qt.formatDateTime(clock.date, "HH:mm - dddd d.")
+            color: Theme.fg
+            font.family: Theme.font
+            font.pixelSize: 13
+            font.bold: true
         }
 
         Item {
@@ -290,114 +225,10 @@ PanelWindow {
 
         RowLayout {
             Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
-            spacing: 12
-
-            RowLayout {
-                spacing: 10
-                Layout.alignment: Qt.AlignVCenter
-
-                RowLayout {
-                    spacing: 4
-                    Layout.alignment: Qt.AlignVCenter
-
-                    Text {
-                        text: "\u{f0ee0}"
-                        color: Theme.blue
-                        font.family: Theme.iconFont
-                        font.pixelSize: 14
-                        Layout.alignment: Qt.AlignVCenter
-                    }
-
-                    Text {
-                        text: bar.cpuUsage + "%"
-                        color: Theme.fgDim
-                        font.family: Theme.font
-                        font.pixelSize: 12
-                        Layout.alignment: Qt.AlignVCenter
-                    }
-                }
-
-                RowLayout {
-                    spacing: 4
-                    Layout.alignment: Qt.AlignVCenter
-
-                    Text {
-                        text: "\u{f035b}"
-                        color: Theme.purple
-                        font.family: Theme.iconFont
-                        font.pixelSize: 14
-                        Layout.alignment: Qt.AlignVCenter
-                    }
-
-                    Text {
-                        text: bar.memUsage + "%"
-                        color: Theme.fgDim
-                        font.family: Theme.font
-                        font.pixelSize: 12
-                        Layout.alignment: Qt.AlignVCenter
-                    }
-                }
-            }
-
-            RowLayout {
-                spacing: 4
-                Layout.alignment: Qt.AlignVCenter
-
-                Text {
-                    text: Theme.volumeIcon(bar.volume, bar.muted)
-                    color: bar.muted ? Theme.red : Theme.cyan
-                    font.family: Theme.iconFont
-                    font.pixelSize: 14
-                    Layout.alignment: Qt.AlignVCenter
-                }
-
-                Text {
-                    text: bar.muted ? "muted" : bar.volume + "%"
-                    color: Theme.fgDim
-                    font.family: Theme.font
-                    font.pixelSize: 12
-                    Layout.alignment: Qt.AlignVCenter
-                }
-
-                TapHandler {
-                    acceptedButtons: Qt.LeftButton | Qt.MiddleButton
-
-                    onTapped: (eventPoint, button) => {
-                        if (button === Qt.MiddleButton)
-                            Quickshell.execDetached(["wpctl", "set-mute", "@DEFAULT_AUDIO_SINK@", "toggle"]);
-                        else
-                            Quickshell.execDetached(["systemsettings", "kcm_pulseaudio"]);
-                    }
-                }
-            }
-
-            RowLayout {
-                visible: bar.hasBattery
-                spacing: 4
-                Layout.alignment: Qt.AlignVCenter
-
-                Text {
-                    text: Theme.batteryIcon(bar.batteryPercent, bar.charging)
-                    color: bar.charging ? Theme.green : (bar.batteryPercent < 15 ? Theme.red : Theme.yellow)
-                    font.family: Theme.iconFont
-                    font.pixelSize: 14
-                    Layout.alignment: Qt.AlignVCenter
-                }
-
-                Text {
-                    text: bar.batteryPercent + "%"
-                    color: Theme.fgDim
-                    font.family: Theme.font
-                    font.pixelSize: 12
-                    Layout.alignment: Qt.AlignVCenter
-                }
-
-                TapHandler {
-                    onTapped: Quickshell.execDetached(["systemsettings", "kcm_powerdevilprofilesconfig"])
-                }
-            }
+            spacing: 8
 
             Rectangle {
+                visible: SystemTray.items.values.length > 0
                 width: 1
                 height: 16
                 color: Theme.alpha(Theme.surfaceAlt, 0.8)
@@ -458,62 +289,45 @@ PanelWindow {
                 }
             }
 
-            Text {
-                text: "\u{f0425}"
-                color: Theme.red
-                font.family: Theme.iconFont
-                font.pixelSize: 15
+            Rectangle {
+                visible: SystemTray.items.values.length > 0
+                width: 1
+                height: 16
+                color: Theme.alpha(Theme.surfaceAlt, 0.8)
+                Layout.alignment: Qt.AlignVCenter
+            }
+
+            StatusCluster {
                 Layout.alignment: Qt.AlignVCenter
 
-                MouseArea {
-                    anchors.fill: parent
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: Quickshell.execDetached(["wlogout"])
-                }
+                wifiAvailable: Networking.wifiHardwareEnabled
+                wifiEnabled: Networking.wifiEnabled
+                bluetoothAvailable: bar.bluetoothAdapter !== null
+                bluetoothEnabled: bar.bluetoothOn
+                hasMedia: bar.hasMedia
+                playing: bar.player !== null && bar.player.isPlaying
+                volume: bar.volume
+                muted: bar.muted
+                hasMic: bar.hasMicrophone
+                micMuted: bar.micMuted
+                hasBattery: bar.hasBattery
+                batteryPercent: bar.batteryPercent
+                charging: bar.charging
+                dnd: bar.shellState ? bar.shellState.dnd : false
+                notificationCount: bar.notificationCount
+                active: bar.controlCenterOpen
+
+                onClicked: bar.shellState.toggleQuickSettings(bar.screenName)
+            }
+
+            BarButton {
+                glyph: "\u{f0425}"
+                glyphColor: Theme.red
+                iconSize: 15
+
+                onClicked: bar.shellState.openPower("poweroff")
             }
         }
-    }
-
-    // ------------------------------------------------------- system stats
-
-    property int cpuUsage: 0
-    property int memUsage: 0
-    property var previousCpu: null
-
-    function updateStats(text) {
-        const lines = text.trim().split("\n");
-        if (lines.length < 1)
-            return;
-
-        // user nice system idle iowait irq softirq steal
-        const fields = lines[0].trim().split(/\s+/).slice(1, 9).map(Number);
-        const total = fields.reduce((sum, value) => sum + value, 0);
-        const idle = fields[3] + fields[4];
-
-        if (previousCpu !== null) {
-            const totalDelta = total - previousCpu.total;
-            const idleDelta = idle - previousCpu.idle;
-            if (totalDelta > 0)
-                cpuUsage = Math.round(100 * (totalDelta - idleDelta) / totalDelta);
-        }
-
-        previousCpu = {total: total, idle: idle};
-
-        let totalMemory = 0;
-        let availableMemory = 0;
-
-        for (const line of lines.slice(1)) {
-            const match = line.match(/^(MemTotal|MemAvailable):\s+(\d+)/);
-            if (!match)
-                continue;
-            if (match[1] === "MemTotal")
-                totalMemory = Number(match[2]);
-            else
-                availableMemory = Number(match[2]);
-        }
-
-        if (totalMemory > 0)
-            memUsage = Math.round(100 * (totalMemory - availableMemory) / totalMemory);
     }
 
     // ------------------------------------------------------------- volume
@@ -522,6 +336,11 @@ PanelWindow {
     readonly property var audio: sink ? sink.audio : null
     readonly property int volume: audio ? Math.round(audio.volume * 100) : 0
     readonly property bool muted: audio ? audio.muted : false
+
+    readonly property var source: Pipewire.defaultAudioSource
+    readonly property var microphone: source ? source.audio : null
+    readonly property bool hasMicrophone: microphone !== null
+    readonly property bool micMuted: microphone ? microphone.muted : false
 
     // ------------------------------------------------------------ battery
 

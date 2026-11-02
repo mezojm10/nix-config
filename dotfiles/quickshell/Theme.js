@@ -24,11 +24,29 @@ const red = "#f7768e";
 const font = "JetBrainsMono Nerd Font";
 const iconFont = "JetBrainsMono Nerd Font";
 
-function alpha(hex, a) {
+function alpha(color, a) {
+    const hex = typeof color === "string" ? color : color.toString();
     const aa = Math.round(Math.max(0, Math.min(1, a)) * 255)
         .toString(16)
         .padStart(2, "0");
     return "#" + aa + hex.slice(1);
+}
+
+function timeAgo(timestamp) {
+    const seconds = Math.max(0, Math.floor((Date.now() - timestamp) / 1000));
+
+    if (seconds < 60)
+        return "now";
+
+    const minutes = Math.floor(seconds / 60);
+    if (minutes < 60)
+        return minutes + "m";
+
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24)
+        return hours + "h";
+
+    return Math.floor(hours / 24) + "d";
 }
 
 function volumeIcon(volume, muted) {

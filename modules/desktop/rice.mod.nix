@@ -70,7 +70,6 @@ in {
         libnotify
         playerctl
         polkit_gnome
-        wlogout
       ];
 
       # niri's screenshot UI writes here and does not create the directory.
@@ -99,7 +98,6 @@ in {
       home.file = {
         ".config/niri".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/nix/dotfiles/niri";
         ".config/quickshell/tokyo-night".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/nix/dotfiles/quickshell";
-        ".config/wlogout".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/nix/dotfiles/wlogout";
       };
 
       # Lets xdg-desktop-portal associate Quickshell's layer surfaces with an app.
@@ -238,34 +236,6 @@ in {
         };
       };
 
-      services.mako = {
-        enable = true;
-
-        settings = {
-          background-color = "#1a1b26";
-          text-color = "#c0caf5";
-          border-color = "#7aa2f7";
-          progress-color = "over #292e42";
-          border-radius = 12;
-          border-size = 2;
-          default-timeout = 6000;
-          anchor = "top-right";
-          margin = 12;
-          padding = 12;
-          width = 360;
-          height = 180;
-          font = "JetBrainsMono Nerd Font 10";
-          icons = true;
-          max-icon-size = 48;
-          layer = "overlay";
-
-          "urgency=critical" = {
-            border-color = "#f7768e";
-            default-timeout = 0;
-          };
-        };
-      };
-
       services.cliphist = {
         enable = true;
       };
@@ -290,23 +260,6 @@ in {
         enable = true;
         activeConfig = "tokyo-night";
         systemd.enable = true;
-      };
-
-      # mako has no upstream unit, so start it with the graphical session.
-      systemd.user.services.mako = {
-        Unit = {
-          Description = "mako notification daemon";
-          PartOf = ["graphical-session.target"];
-          After = ["graphical-session.target"];
-          Requisite = ["graphical-session.target"];
-        };
-
-        Service = {
-          ExecStart = getExe pkgs.mako;
-          Restart = "on-failure";
-        };
-
-        Install.WantedBy = ["graphical-session.target"];
       };
     };
   };

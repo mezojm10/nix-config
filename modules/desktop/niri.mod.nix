@@ -9,7 +9,6 @@
       playerctl
       polkit_gnome
       swaylock
-      wlogout
       wl-clipboard
 
       # Niri runs X11 apps (including Steam) through this when it is on PATH.

@@ -211,11 +211,41 @@ layer-rule {
 }
 
 layer-rule {
-    match namespace="^notifications$"
+    match namespace="^quickshell-quicksettings$"
     background-effect {
         blur true
     }
-    geometry-corner-radius 12
+    geometry-corner-radius 18
+    shadow {
+        on
+        softness 30
+        spread 4
+        offset x=0 y=8
+        color "#0b0b12b3"
+    }
+}
+
+layer-rule {
+    match namespace="^quickshell-popups$"
+    background-effect {
+        blur true
+    }
+    geometry-corner-radius 14
+    shadow {
+        on
+        softness 24
+        spread 2
+        offset x=0 y=6
+        color "#0b0b12b3"
+    }
+}
+
+layer-rule {
+    match namespace="^quickshell-osd$"
+    background-effect {
+        blur true
+    }
+    geometry-corner-radius 14
     shadow {
         on
         softness 24
@@ -236,7 +266,7 @@ binds {
     Mod+B hotkey-overlay-title="Browser: Helium" { spawn "helium"; }
     Mod+E hotkey-overlay-title="File manager: Dolphin" { spawn "dolphin"; }
     Mod+Shift+V hotkey-overlay-title="Clipboard history" { spawn-sh "cliphist list | fuzzel --dmenu | cliphist decode | wl-copy"; }
-    Mod+Escape hotkey-overlay-title="Power menu" { spawn "wlogout"; }
+    Mod+Escape hotkey-overlay-title="Power menu" { spawn "quickshell" "ipc" "--config" "tokyo-night" "call" "power" "poweroff"; }
     Super+Alt+L hotkey-overlay-title="Lock screen" { spawn "swaylock" "--daemonize"; }
 
     // Screenshots (niri's built-in UI, saves and copies to clipboard)
