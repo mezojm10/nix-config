@@ -61,6 +61,12 @@ class LauncherConfig : public settings::ObjectNode {
                 { u"command"_s, QStringList{ u"autocomplete"_s, u"calc"_s } },
             }),
             vmap({
+                { u"name"_s, markCtx(u"Clipboard"_s, u"launcher action"_s) },
+                { u"icon"_s, u"content_paste"_s },
+                { u"description"_s, mark(u"Pick an entry from the clipboard history"_s) },
+                { u"command"_s, QStringList{ u"autocomplete"_s, u"clipboard"_s } },
+            }),
+            vmap({
                 { u"name"_s, markCtx(u"Scheme"_s, u"launcher action"_s) },
                 { u"icon"_s, u"palette"_s },
                 { u"description"_s, mark(u"Change the current colour scheme"_s) },

@@ -29,6 +29,9 @@ StyledListView {
     function stateForText(text: string): string {
         const prefix = GlobalConfig.launcher.actionPrefix;
         if (text.startsWith(prefix)) {
+            if (text === `${prefix}clipboard` || text.startsWith(`${prefix}clipboard `))
+                return "clipboard";
+
             for (const action of ["calc", "scheme", "variant"])
                 if (text.startsWith(`${prefix}${action} `))
                     return action;
@@ -45,6 +48,8 @@ StyledListView {
             return Actions.query(text);
         case "calc":
             return [0];
+        case "clipboard":
+            return Clipboard.query(text);
         case "scheme":
             return Schemes.query(text);
         case "variant":
@@ -87,6 +92,8 @@ StyledListView {
     onStateChanged: {
         if (state === "scheme" || state === "variant")
             Schemes.reload();
+        else if (state === "clipboard" && screenState.launcher)
+            Clipboard.reload();
     }
 
     Component.onCompleted: displayText = search.text
@@ -111,6 +118,13 @@ StyledListView {
 
             PropertyChanges {
                 root.delegate: calcItem
+            }
+        },
+        State {
+            name: "clipboard"
+
+            PropertyChanges {
+                root.delegate: clipboardItem
             }
         },
         State {
@@ -267,6 +281,14 @@ StyledListView {
         id: calcItem
 
         CalcItem {
+            list: root
+        }
+    }
+
+    Component {
+        id: clipboardItem
+
+        ClipboardItem {
             list: root
         }
     }

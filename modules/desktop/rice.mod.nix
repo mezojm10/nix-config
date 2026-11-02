@@ -165,46 +165,6 @@ in {
         };
       };
 
-      programs.fuzzel = {
-        enable = true;
-
-        settings = {
-          main = {
-            font = "JetBrainsMono Nerd Font:size=11";
-            terminal = getExe pkgs.ghostty;
-            layer = "overlay";
-            namespace = "launcher";
-            width = 44;
-            lines = 12;
-            horizontal-pad = 20;
-            vertical-pad = 20;
-            inner-pad = 8;
-            prompt = "❯";
-            icon-theme = "Papirus-Dark";
-            icons-enabled = "yes";
-          };
-
-          colors = {
-            background = "1a1b26f2";
-            text = "c0caf5ff";
-            prompt = "7aa2f7ff";
-            placeholder = "565f89ff";
-            input = "c0caf5ff";
-            match = "bb9af7ff";
-            selection = "292e42ff";
-            selection-text = "c0caf5ff";
-            selection-match = "7dcfffff";
-            counter = "565f89ff";
-            border = "7aa2f7ff";
-          };
-
-          border = {
-            width = 2;
-            radius = 12;
-          };
-        };
-      };
-
       programs.swaylock = {
         enable = true;
 

@@ -5,6 +5,7 @@ import Caelestia
 import Caelestia.Config
 import qs.components.misc
 import qs.services
+import qs.modules.launcher.services
 import qs.modules.nexus
 
 Scope {
@@ -131,6 +132,13 @@ Scope {
             if (typeof screenState[drawer] !== "boolean")
                 return "unknown";
             return screenState[drawer] ? "1" : "0";
+        }
+
+        function clipboard(): void {
+            const screenState = ShellState.forActive();
+            screenState.launcherQuery = `${GlobalConfig.launcher.actionPrefix}clipboard `;
+            screenState.launcher = true;
+            Clipboard.reload();
         }
 
         target: "drawers"

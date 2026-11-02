@@ -19,6 +19,18 @@ Item {
     readonly property int padding: Tokens.padding.large
     readonly property int rounding: Tokens.rounding.extraLarge
 
+    function applyLauncherQuery(): void {
+        const query = screenState.launcherQuery;
+        if (!query)
+            return;
+
+        search.text = query;
+        search.cursorPosition = query.length;
+        screenState.launcherQuery = "";
+    }
+
+    Component.onCompleted: applyLauncherQuery()
+
     implicitWidth: listWrapper.width + padding * 2
     implicitHeight: search.height + listWrapper.height + padding + search.anchors.bottomMargin
 
@@ -113,6 +125,10 @@ Item {
             function onLauncherChanged(): void {
                 if (!root.screenState.launcher)
                     search.text = "";
+            }
+
+            function onLauncherQueryChanged(): void {
+                root.applyLauncherQuery();
             }
 
             function onSessionChanged(): void {

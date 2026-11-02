@@ -27,6 +27,16 @@ make rebasing onto a newer upstream checkout manageable.
 | `modules/windowinfo/*` | Hyprland types replaced by `var`. |
 | `daemons/GameMode.qml` | Stubs out Hyprland option changes; toast wording adjusted. |
 
+## Local additions (not upstream)
+
+- `modules/launcher/services/Clipboard.qml`, `modules/launcher/items/ClipboardItem.qml`
+  and the `clipboard` state in `AppList.qml`: a `cliphist` picker in the
+  launcher, opened with `caelestia-shell ipc call drawers clipboard`
+  (`Super+Shift+C`). Image entries are decoded into
+  `~/.cache/caelestia/cliphist` for thumbnails.
+- `components/ScreenState.qml` + `modules/launcher/Content.qml`: `launcherQuery`,
+  used to prefill the search bar when a drawer opens.
+
 ## Known limitations on niri
 
 - No special workspaces, so `toggleSpecial()` is a no-op and special-workspace

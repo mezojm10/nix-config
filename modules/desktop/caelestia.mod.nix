@@ -10,6 +10,7 @@ in {
   };
 
   flake.homeModules.caelestia = {
+    config,
     pkgs,
     ...
   }: {
@@ -24,11 +25,12 @@ in {
           enable = true;
           target = "graphical-session.target";
         };
-
-        settings = {
-          bar.workspaces.shown = 9;
-        };
       };
+
+      # Link the repo copy instead of letting the module generate a read-only
+      # store file, so shell.json can be edited in place. Caelestia watches the
+      # file (settings.watchFiles) and reloads it on change.
+      xdg.configFile."caelestia/shell.json".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/nix/dotfiles/caelestia/shell.json";
     };
   };
 }

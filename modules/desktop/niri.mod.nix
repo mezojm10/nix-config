@@ -4,7 +4,6 @@
       # Spawned directly from niri binds and startup.
       brightnessctl
       cliphist
-      fuzzel
       ghostty
       playerctl
       polkit_gnome

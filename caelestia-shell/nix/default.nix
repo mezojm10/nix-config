@@ -11,6 +11,7 @@
   lm_sensors,
   swappy,
   wl-clipboard,
+  cliphist,
   libqalculate,
   bash,
   niri,
@@ -46,6 +47,7 @@
       lm_sensors
       swappy
       wl-clipboard
+      cliphist
       libqalculate
       bash
       niri
