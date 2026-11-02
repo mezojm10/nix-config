@@ -4,6 +4,7 @@
       # Spawned directly from niri binds and startup.
       brightnessctl
       cliphist
+      ddcutil
       ghostty
       playerctl
       swaylock

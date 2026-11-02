@@ -131,6 +131,11 @@ in {
         };
       };
 
+      # DDC/CI for the external monitor's brightness. brightnessctl only reaches
+      # the internal panel's EC backlight, which is off while the AOC is
+      # connected; the caelestia shell sets VCP 10 over ddcutil instead.
+      hardware.i2c.enable = true;
+
       # DISPLAYS
       # Turn the built-in panel off whenever an external monitor is connected,
       # and back on when it is unplugged. Confirm the panel's name with
