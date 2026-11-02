@@ -1,6 +1,5 @@
 {...}: {
   flake.homeModules.shell = {
-    config,
     lib,
     pkgs,
     ...
@@ -73,12 +72,6 @@
 
     programs.nushell = {
       enable = true;
-
-      # Bitwarden's SSH agent socket. Must be absolute -- `environmentVariables`
-      # emits a quoted nu string, and nothing expands `~` in SSH_AUTH_SOCK.
-      environmentVariables = {
-        SSH_AUTH_SOCK = "${config.home.homeDirectory}/.bitwarden-ssh-agent.sock";
-      };
 
       # Pick up `home.sessionVariables` (e.g. CLAUDE_CODE_CERT_STORE) in env.nu.
       loadSessionVariables = true;

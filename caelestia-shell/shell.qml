@@ -9,6 +9,7 @@ import Quickshell
 import Caelestia.Config
 import qs.services
 import qs.modules.areapicker
+import qs.modules.askpass
 import qs.modules.background
 import qs.modules.drawers
 import qs.modules.lock
@@ -50,6 +51,7 @@ ShellRoot {
     }
 
     Polkit {}
+    AskPass {}
 
     // Daemons
     Shortcuts {}

@@ -32,6 +32,8 @@
     "services": {
         "audioIncrement": 0.05,
         "clockFormat": "TwelveHour",
-        "dataUnits": "Decimal"
+        "dataUnits": "Decimal",
+        "sensorUnits": "Celsius",
+        "weatherUnits": "Celsius"
     }
 }
