@@ -87,11 +87,48 @@ StyledRect {
         anchors.left: dummySummary.right
         anchors.right: parent.right
         anchors.leftMargin: Tokens.spacing.small
+        anchors.rightMargin: closeBtn.shouldBeActive ? closeBtn.implicitWidth + Tokens.spacing.small : 0
 
         sourceComponent: StyledText {
             text: String(root.modelData?.body ?? "").replace(/\n/g, " ")
             color: root.modelData?.urgency === "critical" ? Colours.palette.m3secondary : Colours.palette.m3outline
             elide: Text.ElideRight
+        }
+
+        Behavior on anchors.rightMargin {
+            Anim {}
+        }
+    }
+
+    // Local addition: hover-revealed dismiss button for a single notification
+    // in the compact view (the expanded view has a close action already).
+    HoverHandler {
+        id: hover
+    }
+
+    WrappedLoader {
+        id: closeBtn
+
+        shouldBeActive: !root.expanded && hover.hovered
+        anchors.top: parent.top
+        anchors.right: parent.right
+
+        sourceComponent: StyledRect {
+            implicitWidth: summaryHeightMetrics.height
+            implicitHeight: summaryHeightMetrics.height
+            radius: Tokens.rounding.full
+            color: "transparent"
+
+            StateLayer {
+                color: Colours.palette.m3onSurface
+                onClicked: root.modelData?.close()
+            }
+
+            MaterialIcon {
+                anchors.centerIn: parent
+                text: "close"
+                color: Colours.palette.m3onSurfaceVariant
+            }
         }
     }
 

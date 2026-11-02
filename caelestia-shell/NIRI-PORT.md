@@ -39,6 +39,9 @@ make rebasing onto a newer upstream checkout manageable.
   dialog backed by `Quickshell.Services.Polkit`. It registers with polkitd on
   startup and replaces `polkit-gnome-authentication-agent-1` from the niri
   config.
+- `modules/sidebar/Notif.qml`: a hover-revealed close button on each
+  notification in the compact sidebar view, so single notifications can be
+  dismissed with a click instead of only by swiping or middle-clicking.
 - `components/ScreenState.qml` + `modules/launcher/Content.qml`: `launcherQuery`,
   used to prefill the search bar when a drawer opens.
 

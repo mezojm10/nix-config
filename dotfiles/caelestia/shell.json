@@ -43,5 +43,8 @@
         "icons": {
             "hibernate": "bedtime"
         }
+    },
+    "sidebar": {
+        "showOnHover": true
     }
 }
