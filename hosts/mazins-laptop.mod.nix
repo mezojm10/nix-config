@@ -173,6 +173,16 @@ in {
             }
           ];
         };
+
+        # GAMES
+        # Native Bloodborne port (packages/bbport). The GTX 1660 Ti is the only
+        # card here with Vulkan 1.3 and robustBufferAccess2, so the Lutris entry
+        # pins VK_DRIVER_FILES to the NVIDIA ICD; the module seeds the folders.
+        programs.bbport = {
+          enable = true;
+          gameDir = "/mnt/games/Games/Bloodborne/game";
+          userDir = "/mnt/games/Games/Bloodborne/Saves";
+        };
       };
     });
 }
