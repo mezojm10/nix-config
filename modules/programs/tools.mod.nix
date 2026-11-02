@@ -12,7 +12,6 @@
       mosh
       nodejs
       ripgrep
-      tpm2-tools
     ];
   };
 }
