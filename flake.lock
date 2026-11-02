@@ -117,28 +117,7 @@
         "helium": "helium",
         "home-manager": "home-manager",
         "nixpkgs": "nixpkgs",
-        "sidra": "sidra",
         "zen-browser": "zen-browser"
-      }
-    },
-    "sidra": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1793346148,
-        "narHash": "sha256-fM3k1BA5p3QRFjkaRKX9ZZ2m3JcZarRZRcJhNC/pHEY=",
-        "owner": "wimpysworld",
-        "repo": "sidra",
-        "rev": "c3308a4233735382dcaa88a2f7cde346cc9c88e8",
-        "type": "github"
-      },
-      "original": {
-        "owner": "wimpysworld",
-        "repo": "sidra",
-        "type": "github"
       }
     },
     "zen-browser": {
