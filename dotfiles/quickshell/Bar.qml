@@ -391,6 +391,10 @@ PanelWindow {
                     font.pixelSize: 12
                     Layout.alignment: Qt.AlignVCenter
                 }
+
+                TapHandler {
+                    onTapped: Quickshell.execDetached(["systemsettings", "kcm_powerdevilprofilesconfig"])
+                }
             }
 
             Rectangle {
@@ -416,10 +420,21 @@ PanelWindow {
                         height: 18
                         visible: modelData.icon !== ""
 
+                        // `icon` is already an image source, not an icon name.
                         IconImage {
                             anchors.fill: parent
-                            source: Quickshell.iconPath(trayItem.modelData.icon)
+                            source: trayItem.modelData.icon
                             implicitSize: 16
+                        }
+
+                        // Drops the menu below the icon, right-aligned to it.
+                        QsMenuAnchor {
+                            id: trayMenu
+
+                            menu: trayItem.modelData.menu
+                            anchor.item: trayItem
+                            anchor.edges: Edges.Bottom | Edges.Right
+                            anchor.gravity: Edges.Bottom | Edges.Left
                         }
 
                         MouseArea {
@@ -427,11 +442,16 @@ PanelWindow {
                             acceptedButtons: Qt.LeftButton | Qt.RightButton
                             cursorShape: Qt.PointingHandCursor
 
+                            // Menu-only items (Steam and other AppIndicator
+                            // apps) ignore activation, so left click opens
+                            // their menu instead.
                             onClicked: mouse => {
-                                if (mouse.button === Qt.LeftButton)
-                                    trayItem.modelData.activate();
-                                else
-                                    trayItem.modelData.display(bar, mouse.x, mouse.y);
+                                const item = trayItem.modelData;
+
+                                if (mouse.button === Qt.LeftButton && !item.onlyMenu)
+                                    item.activate();
+                                else if (item.hasMenu)
+                                    trayMenu.open();
                             }
                         }
                     }

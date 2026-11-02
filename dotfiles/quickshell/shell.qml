@@ -1,5 +1,7 @@
 //@ pragma ShellId tokyo-night
 //@ pragma IconTheme Papirus-Dark
+// Tray menus are Qt platform menus, which need a QApplication.
+//@ pragma UseQApplication
 
 import Quickshell
 import Quickshell.Io
