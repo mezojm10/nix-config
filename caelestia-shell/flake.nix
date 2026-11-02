@@ -37,6 +37,24 @@
     packages = eachSystem (system: let
       pkgs = pkgsOf.${system};
     in rec {
+      # `record` and `screenshot` query monitors over the Hyprland socket,
+      # which does not exist under niri; read them from niri IPC instead.
+      caelestia-cli = inputs.caelestia-cli.packages.${system}.default.overridePythonAttrs (old: {
+        propagatedBuildInputs = old.propagatedBuildInputs ++ [pkgs.niri];
+
+        patchPhase =
+          old.patchPhase
+          + ''
+            cp ${./nix/cli/niri.py} src/caelestia/utils/niri.py
+
+            for file in src/caelestia/subcommands/record.py src/caelestia/subcommands/screenshot.py; do
+              substituteInPlace "$file" \
+                --replace-fail 'from caelestia.utils import hypr' 'from caelestia.utils import niri' \
+                --replace-fail 'hypr.message("monitors")' 'niri.monitors()'
+            done
+          '';
+      });
+
       caelestia-shell = pkgs.callPackage ./nix {
         rev = self.rev or self.dirtyRev;
         stdenv = pkgs.clangStdenv;
@@ -44,7 +62,7 @@
           withX11 = false;
           withI3 = false;
         };
-        caelestia-cli = inputs.caelestia-cli.packages.${system}.default;
+        inherit caelestia-cli;
         m3shapes = inputs.m3shapes.packages.${system}.default;
       };
       with-cli = caelestia-shell.override {withCli = true;};

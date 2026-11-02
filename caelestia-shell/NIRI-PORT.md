@@ -26,6 +26,7 @@ make rebasing onto a newer upstream checkout manageable.
 | `modules/areapicker/Picker.qml` | Drops `hyprctl cursorpos` (niri does not expose the pointer) and uses the shell's own border config instead of Hyprland options. |
 | `modules/windowinfo/*` | Hyprland types replaced by `var`. |
 | `daemons/GameMode.qml` | Stubs out Hyprland option changes; toast wording adjusted. |
+| `flake.nix`, `nix/cli/niri.py`, `nix/hm-module.nix` | `caelestia-cli` is overridden so `record` and `screenshot` read monitors from `niri msg --json outputs` instead of the Hyprland socket. The shell and the HM module both use this patched CLI. Other Hyprland-only CLI commands (`toggle`, `resizer`) are left alone. |
 | `plugin/src/Caelestia/Services/sessionmanager.cpp` | `logout()` runs `niri msg action quit --skip-confirmation` instead of terminating the logind session, which does not stop niri under `niri-session`. |
 
 ## Local additions (not upstream)

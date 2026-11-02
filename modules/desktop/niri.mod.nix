@@ -31,6 +31,11 @@
     # swaylock cannot verify the password to unlock without a PAM service.
     security.pam.services.swaylock = {};
 
+    # caelestia-cli records the screen through gpu-screen-recorder's KMS
+    # capture. Its gsr-kms-server needs CAP_SYS_ADMIN, which this provides as a
+    # setcap wrapper instead of prompting through pkexec on every recording.
+    programs.gpu-screen-recorder.enable = true;
+
     # Battery and power information for the Quickshell bar.
     services.upower.enable = true;
 
