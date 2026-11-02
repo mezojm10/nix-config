@@ -91,7 +91,12 @@ in {
 
       # GRAPHICS
       # VA-API video decoding on the Intel iGPU, which renders by default.
-      hardware.graphics.extraPackages = singleton pkgs.intel-media-driver;
+      hardware.graphics.enable = true;
+      hardware.graphics.enable32Bit = true;
+      hardware.graphics.extraPackages = [
+        pkgs.rocmPackages.clr
+        pkgs.intel-media-driver
+      ];
 
       services.xserver.videoDrivers = ["nvidia"];
 
@@ -100,9 +105,13 @@ in {
       hardware.nvidia = {
         open = true;
 
+        modesetting.enable = true;
+
         # Power the dGPU down when idle.
         powerManagement.enable = true;
         powerManagement.finegrained = true;
+
+        nvidiaSettings = true;
 
         # Render on the iGPU by default; run games on the dGPU with
         # `nvidia-offload %command%` in Steam launch options.
