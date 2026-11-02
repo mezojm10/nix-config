@@ -3,6 +3,7 @@
   inherit (lib.modules) mkIf;
 in {
   flake.homeModules.rice = {
+    config,
     lib,
     pkgs,
     ...
@@ -79,10 +80,12 @@ in {
         style.name = "adwaita-dark";
       };
 
-      xdg.configFile = {
-        "niri/config.kdl".source = ../../dotfiles/niri/config.kdl;
-        "wlogout/layout".source = ../../dotfiles/wlogout/layout;
-        "wlogout/style.css".source = ../../dotfiles/wlogout/style.css;
+      # Link the repo copies instead of copying them into the store, so edits
+      # apply without a rebuild.
+      home.file = {
+        ".config/niri".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/nix/dotfiles/niri";
+        ".config/quickshell/tokyo-night".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/nix/dotfiles/quickshell";
+        ".config/wlogout".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/nix/dotfiles/wlogout";
       };
 
       # Lets xdg-desktop-portal associate Quickshell's layer surfaces with an app.
@@ -276,7 +279,6 @@ in {
       programs.quickshell = {
         enable = true;
         activeConfig = "tokyo-night";
-        configs.tokyo-night = ../../dotfiles/quickshell;
         systemd.enable = true;
       };
 
