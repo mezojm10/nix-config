@@ -10,6 +10,13 @@ in {
     # polkit actions are visible.
     environment.systemPackages = singleton pkgs.kdePackages.powerdevil;
 
+    # Profiles only link allowlisted directories, and the home profile follows
+    # the same list. KDE reads a lot from share/ by XDG lookup: the Network
+    # page's QML (share/kcm_networkmanagement), the Breeze Dark palette (see
+    # `qt` in rice.mod.nix), translations, notifications. Plasma's own module
+    # links all of share/ for the same reason.
+    environment.pathsToLink = singleton "/share";
+
     # Plasma's power management daemon, which the Power Management page talks
     # to. It takes over idle suspend, the lid switch, and the power button from
     # logind. Under niri it cannot turn screens off (that needs KWin's DPMS
