@@ -16,7 +16,9 @@ PanelWindow {
     property var modelData
     property var workspaces: []
 
-    readonly property var visibleWorkspaces: workspaces.filter(workspace => workspace.output === screen.name)
+    readonly property var visibleWorkspaces: workspaces
+        .filter(workspace => workspace.output === screen.name)
+        .sort((a, b) => a.idx - b.idx)
     readonly property var focusedWorkspace: {
         for (const workspace of visibleWorkspaces)
             if (workspace.is_focused)
