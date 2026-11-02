@@ -15,6 +15,10 @@ in {
       ...
     }: let
       inherit (lib) toString;
+      inherit (lib.meta) getExe getExe';
+
+      # The embedded controller only offers a binary "conservation mode".
+      conservationMode = "/sys/bus/platform/drivers/ideapad_acpi/VPC2004:00/conservation_mode";
     in {
       nixpkgs.hostPlatform = "x86_64-linux";
       nixpkgs.allowedUnfreePackages = ["nvidia-settings" "nvidia-x11"];
@@ -83,6 +87,34 @@ in {
 
       # ntfs-3g userspace tools (ntfsfix, ntfslabel) for maintaining that partition.
       boot.supportedFilesystems.ntfs = true;
+
+      # POWER
+      # Keep the battery below the EC's ~60% conservation threshold to slow
+      # wear. The script below can turn it off for a full charge.
+      environment.systemPackages = [
+        (pkgs.writeShellScriptBin "battery-conservation" ''
+          case "''${1:-status}" in
+            status) ${getExe' pkgs.coreutils "cat"} ${conservationMode} ;;
+            on) echo 1 | ${getExe pkgs.sudo} ${getExe' pkgs.coreutils "tee"} ${conservationMode} >/dev/null ;;
+            off) echo 0 | ${getExe pkgs.sudo} ${getExe' pkgs.coreutils "tee"} ${conservationMode} >/dev/null ;;
+            *)
+              echo "usage: battery-conservation [on|off|status]" >&2
+              exit 1
+              ;;
+          esac
+        '')
+      ];
+
+      systemd.services.battery-conservation = {
+        description = "Enable Lenovo battery conservation mode";
+        wantedBy = ["multi-user.target"];
+
+        serviceConfig = {
+          Type = "oneshot";
+          ExecStart = "${getExe' pkgs.coreutils "tee"} ${conservationMode}";
+          StandardInputText = "1";
+        };
+      };
 
       # GRAPHICS
       # VA-API video decoding on the Intel iGPU, which renders by default.
