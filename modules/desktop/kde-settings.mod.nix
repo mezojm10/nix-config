@@ -17,6 +17,12 @@ in {
     # links all of share/ for the same reason.
     environment.pathsToLink = singleton "/share";
 
+    # Kirigami and other KColorScheme users read colors only from kdeglobals'
+    # [Colors:*] groups, which Plasma normally copies in. Ship Breeze Dark as
+    # the system-wide kdeglobals, so ~/.config/kdeglobals stays writable and
+    # only overrides it.
+    environment.etc."xdg/kdeglobals".source = "${pkgs.kdePackages.breeze}/share/color-schemes/BreezeDark.colors";
+
     # Plasma's power management daemon, which the Power Management page talks
     # to. It takes over idle suspend, the lid switch, and the power button from
     # logind. Under niri it cannot turn screens off (that needs KWin's DPMS
@@ -44,13 +50,16 @@ in {
     # In the home profile because home-manager's `qt` module puts that
     # profile's Qt plugin and QML directories on the search paths, which is how
     # System Settings finds the pages shipped by other packages. Open a single
-    # page with e.g. `systemsettings kcm_networkmanagement`. bluez-qt and
-    # kirigami-addons provide QML modules the Bluetooth and Audio pages import.
+    # page with e.g. `systemsettings kcm_networkmanagement`. bluez-qt,
+    # kirigami-addons and libplasma (with ksvg) provide QML modules that the
+    # Bluetooth, Audio and Network pages import.
     home.packages = mkIf pkgs.stdenv.hostPlatform.isLinux (with pkgs.kdePackages; [
       bluedevil
       bluez-qt
       kinfocenter
       kirigami-addons
+      ksvg
+      libplasma
       plasma-nm
       plasma-pa
       powerdevil

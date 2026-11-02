@@ -78,9 +78,9 @@ in {
         run mkdir -p "$HOME/Pictures/Screenshots"
       '';
 
-      # KDE's platform theme: the Breeze style with Breeze Dark colors, read
-      # from color-schemes/BreezeDark.colors since kdeglobals carries no color
-      # groups of its own. No `style.name`, because the QT_STYLE_OVERRIDE it
+      # KDE's platform theme: the Breeze style with Breeze Dark colors (the
+      # color groups come from the system kdeglobals that kde-settings.mod.nix
+      # installs). No `style.name`, because the QT_STYLE_OVERRIDE it
       # sets also becomes the Qt Quick Controls style and crashes Kirigami
       # apps such as System Settings.
       qt = {
