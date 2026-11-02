@@ -18,6 +18,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # Rex terminal multiplexer. The snapshot channel matches the Rex Beta app
+    # on the Mac, which connects to the laptop's server.
+    rex.url = "https://pkgs.superlogical.com/rex/nix/snapshot.tar.gz";
+    rex.inputs.nixpkgs.follows = "nixpkgs";
+
     # Fork of github:caelestia-dots/shell ported to niri. The source lives in
     # ./caelestia-shell so shell changes apply without touching flake inputs.
     caelestia-shell = {

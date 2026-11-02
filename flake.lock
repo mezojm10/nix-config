@@ -250,6 +250,23 @@
         "url": "https://git.outfoxxed.me/outfoxxed/quickshell"
       }
     },
+    "rex": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1793645657,
+        "narHash": "sha256-o9K3i+H/d5N/DYWSykDXajTEvWz7Hi77sYGDmlHgC2w=",
+        "type": "tarball",
+        "url": "https://pkgs.superlogical.com/rex/nix/snapshot/0.0.1793645657-gd018d2.tar.gz"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://pkgs.superlogical.com/rex/nix/snapshot.tar.gz"
+      }
+    },
     "root": {
       "inputs": {
         "caelestia-shell": "caelestia-shell",
@@ -259,6 +276,7 @@
         "home-manager": "home-manager",
         "millennium": "millennium",
         "nixpkgs": "nixpkgs",
+        "rex": "rex",
         "zen-browser": "zen-browser"
       }
     },
