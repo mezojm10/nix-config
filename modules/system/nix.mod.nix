@@ -10,5 +10,12 @@
     nix.settings.experimental-features = ["nix-command" "flakes" "pipe-operators"];
 
     nix.settings.trusted-users = ["@wheel"];
+
+    # Weekly garbage collection, keeping generations from the last month.
+    nix.gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 30d";
+    };
   };
 }
