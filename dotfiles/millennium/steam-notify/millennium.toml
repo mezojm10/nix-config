@@ -1,0 +1,20 @@
+# Steam notifications go to the system notification daemon (notify-send →
+# Caelestia/Quickshell or any other daemon); Steam's own toasts are suppressed.
+# Build: bun install && bun run build, then enable in Steam → Millennium → Plugins.
+
+[plugin]
+id = "steam-notify"
+name = "Steam notifications"
+version = "1.0.0"
+author = "nopox, adapted"
+description = "Steam notifications as native desktop notifications via notify-send."
+
+[backend]
+entry = "backend/main.lua"
+sources = ["backend/**/*.lua"]
+
+[frontend]
+entry = "frontend/index.tsx"
+
+[compiler]
+output_path = "auto"

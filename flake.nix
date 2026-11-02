@@ -11,6 +11,12 @@
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
     zen-browser.inputs.nixpkgs.follows = "nixpkgs";
     zen-browser.inputs.home-manager.follows = "home-manager";
+    # Steam client plugin framework; the steam-notify plugin under
+    # dotfiles/millennium forwards Steam's own toasts to the system daemon.
+    millennium = {
+      url = "github:SteamClientHomebrew/Millennium?dir=packages/nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     # Fork of github:caelestia-dots/shell ported to niri. The source lives in
     # ./caelestia-shell so shell changes apply without touching flake inputs.
