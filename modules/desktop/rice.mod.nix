@@ -63,6 +63,10 @@ in {
 
       home.packages = with pkgs; [
         brightnessctl
+
+        # The Breeze widget style and the Breeze Dark color scheme.
+        kdePackages.breeze
+
         libnotify
         playerctl
         polkit_gnome
@@ -74,10 +78,20 @@ in {
         run mkdir -p "$HOME/Pictures/Screenshots"
       '';
 
+      # KDE's platform theme: the Breeze style with Breeze Dark colors, read
+      # from color-schemes/BreezeDark.colors since kdeglobals carries no color
+      # groups of its own. No `style.name`, because the QT_STYLE_OVERRIDE it
+      # sets also becomes the Qt Quick Controls style and crashes Kirigami
+      # apps such as System Settings.
       qt = {
         enable = true;
-        platformTheme.name = "adwaita";
-        style.name = "adwaita-dark";
+        platformTheme.name = "kde";
+
+        kde.settings.kdeglobals = {
+          General.ColorScheme = "BreezeDark";
+          General.font = "Inter,11,-1,5,400,0,0,0,0,0,0,0,0,0,0,1";
+          Icons.Theme = "Papirus-Dark";
+        };
       };
 
       # Link the repo copies instead of copying them into the store, so edits
