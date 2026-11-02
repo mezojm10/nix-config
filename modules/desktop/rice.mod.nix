@@ -241,7 +241,8 @@ in {
       };
 
       services.swayidle = {
-        enable = true;
+        # Caelestia's IdleMonitors daemon handles idle locking and DPMS.
+        enable = false;
 
         events = {
           before-sleep = "${getExe pkgs.swaylock} --daemonize";
@@ -256,8 +257,11 @@ in {
         };
       };
 
+      # The active shell is Caelestia (modules/desktop/caelestia.mod.nix). The
+      # Tokyo Night Quickshell config stays in dotfiles/quickshell for reference
+      # and can be started manually with `qs -c tokyo-night`.
       programs.quickshell = {
-        enable = true;
+        enable = false;
         activeConfig = "tokyo-night";
         systemd.enable = true;
       };

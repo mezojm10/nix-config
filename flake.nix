@@ -11,6 +11,16 @@
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
     zen-browser.inputs.nixpkgs.follows = "nixpkgs";
     zen-browser.inputs.home-manager.follows = "home-manager";
+
+    # Fork of github:caelestia-dots/shell ported to niri. The source lives in
+    # ./caelestia-shell so shell changes apply without touching flake inputs.
+    caelestia-shell = {
+      url = "path:./caelestia-shell";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.quickshell.inputs.nixpkgs.follows = "nixpkgs";
+      inputs.m3shapes.inputs.nixpkgs.follows = "nixpkgs";
+      inputs.caelestia-cli.inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs:

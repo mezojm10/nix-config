@@ -61,14 +61,6 @@ layout {
         offset x=0 y=8
         color "#0b0b12b3"
     }
-
-    struts {
-        left 4
-        right 4
-        // Bar height (36) plus its top margin (6).
-        top 42
-        bottom 4
-    }
 }
 
 prefer-no-csd
@@ -186,74 +178,9 @@ window-rule {
 
 // ---------------------------------------------------------------- layer rules
 
-layer-rule {
-    match namespace="^quickshell-bar$"
-    background-effect {
-        blur true
-    }
-    geometry-corner-radius 12
-}
-
-layer-rule {
-    match namespace="^launcher$"
-    opacity 0.97
-    background-effect {
-        blur true
-    }
-    geometry-corner-radius 12
-    shadow {
-        on
-        softness 30
-        spread 4
-        offset x=0 y=8
-        color "#0b0b12b3"
-    }
-}
-
-layer-rule {
-    match namespace="^quickshell-quicksettings$"
-    background-effect {
-        blur true
-    }
-    geometry-corner-radius 18
-    shadow {
-        on
-        softness 30
-        spread 4
-        offset x=0 y=8
-        color "#0b0b12b3"
-    }
-}
-
-layer-rule {
-    match namespace="^quickshell-popups$"
-    background-effect {
-        blur true
-    }
-    geometry-corner-radius 14
-    shadow {
-        on
-        softness 24
-        spread 2
-        offset x=0 y=6
-        color "#0b0b12b3"
-    }
-}
-
-layer-rule {
-    match namespace="^quickshell-osd$"
-    background-effect {
-        blur true
-    }
-    geometry-corner-radius 14
-    shadow {
-        on
-        softness 24
-        spread 2
-        offset x=0 y=6
-        color "#0b0b12b3"
-    }
-}
+// Caelestia reserves its own space through layer-shell exclusive zones, and
+// draws the bar/drawer surfaces itself (they share one full-screen layer
+// surface), so there is nothing to blur or round here.
 
 // ---------------------------------------------------------------------- binds
 
@@ -262,12 +189,15 @@ binds {
 
     // Applications
     Mod+Return hotkey-overlay-title="Terminal: Ghostty" { spawn "ghostty"; }
-    Mod+D hotkey-overlay-title="Launcher: fuzzel" { spawn "fuzzel"; }
+    Mod+D hotkey-overlay-title="Launcher" { spawn "caelestia-shell" "ipc" "call" "drawers" "toggle" "launcher"; }
     Mod+B hotkey-overlay-title="Browser: Helium" { spawn "helium"; }
     Mod+E hotkey-overlay-title="File manager: Dolphin" { spawn "dolphin"; }
     Mod+Shift+V hotkey-overlay-title="Clipboard history" { spawn-sh "cliphist list | fuzzel --dmenu | cliphist decode | wl-copy"; }
-    Mod+Escape hotkey-overlay-title="Power menu" { spawn "quickshell" "ipc" "--config" "tokyo-night" "call" "power" "poweroff"; }
-    Super+Alt+L hotkey-overlay-title="Lock screen" { spawn "swaylock" "--daemonize"; }
+    Mod+Escape hotkey-overlay-title="Power menu" { spawn "caelestia-shell" "ipc" "call" "drawers" "toggle" "session"; }
+    Mod+Shift+D hotkey-overlay-title="Dashboard" { spawn "caelestia-shell" "ipc" "call" "drawers" "toggle" "dashboard"; }
+    Mod+Shift+A hotkey-overlay-title="Utilities" { spawn "caelestia-shell" "ipc" "call" "drawers" "toggle" "utilities"; }
+    Mod+Shift+S hotkey-overlay-title="Sidebar" { spawn "caelestia-shell" "ipc" "call" "drawers" "toggle" "sidebar"; }
+    Super+Alt+L hotkey-overlay-title="Lock screen" { spawn "caelestia-shell" "ipc" "call" "lock" "lock"; }
 
     // Screenshots (niri's built-in UI, saves and copies to clipboard)
     Print { screenshot; }
