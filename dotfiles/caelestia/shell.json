@@ -5,18 +5,71 @@
         }
     },
     "bar": {
-        "workspaces": {
-            "shown": 9
+        "activeWindow": {
+            "compact": false,
+            "inverted": false,
+            "showOnHover": true
         },
+        "clock": {
+            "background": false,
+            "showDate": true,
+            "showIcon": false,
+            "showSeconds": false
+        },
+        "persistent": true,
+        "popouts": {
+            "activeWindow": true
+        },
+        "scrollActions": {
+            "brightness": false,
+            "volume": false
+        },
+        "showOnHover": true,
         "statusIcons": [
-            { "id": "lockStatus", "enabled": true },
-            { "id": "audio", "enabled": false },
-            { "id": "microphone", "enabled": false },
-            { "id": "kbLayout", "enabled": true },
-            { "id": "network", "enabled": true },
-            { "id": "bluetooth", "enabled": true },
-            { "id": "battery", "enabled": true }
-        ]
+            {
+                "enabled": false,
+                "id": "lockStatus"
+            },
+            {
+                "enabled": false,
+                "id": "audio"
+            },
+            {
+                "enabled": false,
+                "id": "microphone"
+            },
+            {
+                "enabled": true,
+                "id": "kbLayout"
+            },
+            {
+                "enabled": true,
+                "id": "network"
+            },
+            {
+                "enabled": true,
+                "id": "bluetooth"
+            },
+            {
+                "enabled": true,
+                "id": "battery"
+            }
+        ],
+        "tray": {
+            "background": false,
+            "compact": false,
+            "recolour": true
+        },
+        "workspaces": {
+            "activeIndicator": true,
+            "activeTrail": true,
+            "occupiedBg": false,
+            "perMonitor": true,
+            "showUnoccupied": false,
+            "showWindows": true,
+            "showWindowsOnSpecialWorkspaces": true,
+            "shown": 9
+        }
     },
     "general": {
         "apps": {
@@ -45,6 +98,7 @@
         "audioIncrement": 0.05,
         "clockFormat": "TwelveHour",
         "dataUnits": "Decimal",
+        "gpuType": "Auto",
         "sensorUnits": "Celsius",
         "weatherUnits": "Celsius"
     },
@@ -59,6 +113,7 @@
         }
     },
     "sidebar": {
+        "enabled": true,
         "showOnHover": true
     },
     "utilities": {

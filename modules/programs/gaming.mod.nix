@@ -3,15 +3,86 @@
   lib,
   ...
 }: let
+  inherit (lib.attrsets) mapAttrsToList;
   inherit (lib.lists) singleton;
   inherit (lib.meta) getExe;
   inherit (lib.modules) mkIf;
+  inherit (lib.strings) makeBinPath;
 in {
   flake.nixosModules.gaming = {pkgs, ...}: {
     nixpkgs.allowedUnfreePackages = ["steam" "steam-unwrapped"];
     nixpkgs.overlays = [inputs.millennium.overlays.default];
 
-    environment.systemPackages = singleton pkgs.gamescope;
+    environment.systemPackages = let
+      # Both panels are 1920x1080; change these two for another display.
+      output = {
+        width = 1920;
+        height = 1080;
+      };
+
+      # 144 Hz divides evenly by 2 and 3, so 72/48 avoid 60-on-144 judder.
+      presets = {
+        native = {
+          width = 1920;
+          height = 1080;
+          fps = 144;
+          scaler = "fit";
+          filter = "linear";
+        };
+        quality = {
+          width = 1600;
+          height = 900;
+          fps = 144;
+          scaler = "fit";
+          filter = "fsr";
+        };
+        balanced = {
+          width = 1280;
+          height = 720;
+          fps = 72;
+          scaler = "fit";
+          filter = "fsr";
+        };
+        performance = {
+          width = 960;
+          height = 540;
+          fps = 48;
+          scaler = "fit";
+          filter = "fsr";
+        };
+        pixel = {
+          width = 960;
+          height = 540;
+          fps = 144;
+          scaler = "integer";
+          filter = "nearest";
+        };
+      };
+
+      mkPreset = name: preset: let
+        script =
+          /*
+          bash
+          */
+          ''
+            PATH=${makeBinPath [pkgs.mangohud]}:$PATH
+
+            exec ${getExe pkgs.gamescope} \
+              --output-width ${toString output.width} \
+              --output-height ${toString output.height} \
+              --nested-width ${toString preset.width} \
+              --nested-height ${toString preset.height} \
+              --nested-refresh ${toString preset.fps} \
+              --scaler ${preset.scaler} \
+              --filter ${preset.filter} \
+              --mangoapp \
+              --fullscreen \
+              -- "$@"
+          '';
+      in
+        pkgs.writeShellScriptBin "gamescope-${name}" script;
+    in
+      singleton pkgs.gamescope ++ mapAttrsToList mkPreset presets;
 
     programs.gamemode.enable = true;
 
