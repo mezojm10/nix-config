@@ -3,12 +3,15 @@
   lib,
   ...
 }: let
+  inherit (lib.lists) singleton;
   inherit (lib.meta) getExe;
   inherit (lib.modules) mkIf;
 in {
   flake.nixosModules.gaming = {pkgs, ...}: {
     nixpkgs.allowedUnfreePackages = ["steam" "steam-unwrapped"];
     nixpkgs.overlays = [inputs.millennium.overlays.default];
+
+    environment.systemPackages = singleton pkgs.gamescope;
 
     programs.gamemode.enable = true;
 
@@ -20,11 +23,12 @@ in {
       # profile where home-manager installs MangoHud. libnotify is here so the
       # Millennium notification backend can run notify-send inside Steam's
       # bubblewrap environment.
-      extraPackages = [pkgs.libnotify pkgs.mangohud];
+      extraPackages = [pkgs.gamescope pkgs.libnotify pkgs.mangohud];
     };
   };
 
   flake.homeModules.gaming = {
+    config,
     lib,
     osConfig,
     pkgs,
@@ -32,6 +36,10 @@ in {
   }: {
     config = mkIf pkgs.stdenv.hostPlatform.isLinux {
       home.packages = [pkgs.bottles];
+
+      # MangoHud re-reads this on every launch, so keep it a plain dotfile that
+      # can be edited in place instead of a config generated at rebuild time.
+      home.file.".config/MangoHud/MangoHud.conf".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/nix/dotfiles/mangohud/MangoHud.conf";
 
       # Millennium plugin that drains Steam's own toast queue and forwards it
       # through notify-send, so Caelestia's NotificationServer handles it.
