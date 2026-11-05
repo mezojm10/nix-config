@@ -113,7 +113,7 @@ in {
       home.file.".config/MangoHud/MangoHud.conf".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/nix/dotfiles/mangohud/MangoHud.conf";
 
       # Millennium plugin that drains Steam's own toast queue and forwards it
-      # through notify-send, so Caelestia's NotificationServer handles it.
+      # through notify-send, so Noctalia's notification daemon handles it.
       home.file.".local/share/millennium/plugins/steam-notify.star".source = ../../dotfiles/millennium/steam-notify.star;
 
       # Millennium rewrites this file at runtime, so it has to stay a real file

@@ -1,7 +1,7 @@
 # Steam notifications
 
 Millennium plugin that turns Steam's own desktop toasts into freedesktop
-notifications, so Caelestia/Quickshell shows them like any other notification.
+notifications, so Noctalia shows them like any other notification.
 
 Steam renders its toasts itself and never talks to `org.freedesktop.Notifications`.
 The frontend hook drains `NotificationStore.m_rgNotificationToasts` before Steam's

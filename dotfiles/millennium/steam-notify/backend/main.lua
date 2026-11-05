@@ -24,7 +24,7 @@ local function q(s)
 end
 
 ---@ffi
---- Show a notification through notify-send (picked up by Caelestia/Quickshell
+--- Show a notification through notify-send (picked up by Noctalia
 --- or any other notification daemon).
 ---@param title string
 ---@param body string

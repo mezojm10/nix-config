@@ -66,6 +66,11 @@ layout {
 
 prefer-no-csd
 
+debug {
+    // Allows notification actions and window activation from Noctalia.
+    honor-xdg-activation-with-invalid-serial
+}
+
 cursor {
     xcursor-theme "Bibata-Modern-Ice"
     xcursor-size 24
@@ -176,11 +181,39 @@ window-rule {
     open-floating true
 }
 
+// Noctalia's settings window floats at a fixed size.
+window-rule {
+    match app-id=r#"^dev\.noctalia\.Noctalia$"#
+    open-floating true
+    default-column-width { fixed 1080; }
+    default-window-height { fixed 920; }
+}
+
 // ---------------------------------------------------------------- layer rules
 
-// Caelestia reserves its own space through layer-shell exclusive zones, and
-// draws the bar/drawer surfaces itself (they share one full-screen layer
-// surface), so there is nothing to blur or round here.
+// Noctalia publishes blur regions for its own surfaces when niri supports
+// ext-background-effects. Disable xray so the blur samples the content behind
+// the shell instead of the wallpaper.
+layer-rule {
+    match namespace="^noctalia-(bar-[^\"]+|notification|dock|panel|attached-panel|osd)$"
+    background-effect {
+        xray false
+    }
+}
+
+layer-rule {
+    match namespace="noctalia-window-switcher"
+    background-effect {
+        blur true
+        xray false
+    }
+}
+
+// Noctalia's blurred wallpaper layer for niri's overview.
+layer-rule {
+    match namespace="^noctalia-backdrop"
+    place-within-backdrop true
+}
 
 // ---------------------------------------------------------------------- binds
 
@@ -189,15 +222,16 @@ binds {
 
     // Applications
     Mod+Return hotkey-overlay-title="Terminal: Ghostty" { spawn "ghostty"; }
-    Mod+D hotkey-overlay-title="Launcher" { spawn "caelestia-shell" "ipc" "call" "drawers" "toggle" "launcher"; }
+    Mod+Space hotkey-overlay-title="Launcher" { spawn "noctalia" "msg" "panel-toggle" "launcher"; }
     Mod+B hotkey-overlay-title="Browser: Helium" { spawn "helium"; }
     Mod+E hotkey-overlay-title="File manager: Dolphin" { spawn "dolphin"; }
-    Mod+Shift+C hotkey-overlay-title="Clipboard history" { spawn "caelestia-shell" "ipc" "call" "drawers" "clipboard"; }
-    Mod+Escape hotkey-overlay-title="Power menu" { spawn "caelestia-shell" "ipc" "call" "drawers" "toggle" "session"; }
-    Mod+Shift+D hotkey-overlay-title="Dashboard" { spawn "caelestia-shell" "ipc" "call" "drawers" "toggle" "dashboard"; }
-    Mod+Shift+A hotkey-overlay-title="Utilities" { spawn "caelestia-shell" "ipc" "call" "drawers" "toggle" "utilities"; }
-    Mod+Shift+S hotkey-overlay-title="Sidebar" { spawn "caelestia-shell" "ipc" "call" "drawers" "toggle" "sidebar"; }
-    Super+Alt+L hotkey-overlay-title="Lock screen" { spawn "caelestia-shell" "ipc" "call" "lock" "lock"; }
+    Mod+Shift+C hotkey-overlay-title="Clipboard history" { spawn "noctalia" "msg" "panel-toggle" "clipboard"; }
+    Mod+Escape hotkey-overlay-title="Power menu" { spawn "noctalia" "msg" "panel-toggle" "session"; }
+    Mod+Shift+D hotkey-overlay-title="Control center" { spawn "noctalia" "msg" "panel-toggle" "control-center"; }
+    Mod+Shift+A hotkey-overlay-title="Control center" { spawn "noctalia" "msg" "panel-toggle" "control-center"; }
+    Mod+Shift+S hotkey-overlay-title="Control center" { spawn "noctalia" "msg" "panel-toggle" "control-center"; }
+    Mod+Shift+Comma hotkey-overlay-title="Shell settings" { spawn "noctalia" "msg" "settings-toggle"; }
+    Super+Alt+L hotkey-overlay-title="Lock screen" { spawn "noctalia" "msg" "session" "lock"; }
 
     // Screenshots (niri's built-in UI, saves and copies to clipboard)
     Print { screenshot; }
@@ -330,18 +364,18 @@ binds {
     Mod+W       { toggle-column-tabbed-display; }
 
     // Media and hardware keys
-    XF86AudioRaiseVolume allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.05+ -l 1.0"; }
-    XF86AudioLowerVolume allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.05-"; }
-    XF86AudioMute        allow-when-locked=true { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"; }
-    XF86AudioMicMute     allow-when-locked=true { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"; }
+    XF86AudioRaiseVolume allow-when-locked=true { spawn "noctalia" "msg" "volume-up"; }
+    XF86AudioLowerVolume allow-when-locked=true { spawn "noctalia" "msg" "volume-down"; }
+    XF86AudioMute        allow-when-locked=true { spawn "noctalia" "msg" "volume-mute"; }
+    XF86AudioMicMute     allow-when-locked=true { spawn "noctalia" "msg" "mic-mute"; }
 
-    XF86AudioPlay allow-when-locked=true { spawn-sh "playerctl play-pause"; }
-    XF86AudioStop allow-when-locked=true { spawn-sh "playerctl stop"; }
-    XF86AudioPrev allow-when-locked=true { spawn-sh "playerctl previous"; }
-    XF86AudioNext allow-when-locked=true { spawn-sh "playerctl next"; }
+    XF86AudioPlay allow-when-locked=true { spawn "noctalia" "msg" "media" "toggle"; }
+    XF86AudioStop allow-when-locked=true { spawn "noctalia" "msg" "media" "stop"; }
+    XF86AudioPrev allow-when-locked=true { spawn "noctalia" "msg" "media" "previous"; }
+    XF86AudioNext allow-when-locked=true { spawn "noctalia" "msg" "media" "next"; }
 
-    XF86MonBrightnessUp allow-when-locked=true { spawn "caelestia" "shell" "brightness" "set" "+5%"; }
-    XF86MonBrightnessDown allow-when-locked=true { spawn "caelestia" "shell" "brightness" "set" "5%-"; }
+    XF86MonBrightnessUp allow-when-locked=true { spawn "noctalia" "msg" "brightness-up"; }
+    XF86MonBrightnessDown allow-when-locked=true { spawn "noctalia" "msg" "brightness-down"; }
 
     // Escape hatch for keyboard-shortcut inhibitors.
     Mod+Shift+Escape { toggle-keyboard-shortcuts-inhibit; }
@@ -349,3 +383,6 @@ binds {
     // Power off monitors.
     Mod+Shift+Period { power-off-monitors; }
 }
+
+
+include "noctalia.kdl"

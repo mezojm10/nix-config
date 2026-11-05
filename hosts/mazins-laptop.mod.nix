@@ -85,9 +85,44 @@ in {
       boot.supportedFilesystems.ntfs = true;
 
       # POWER
-      # Battery conservation mode (the EC holds the charge at ~60% to slow wear)
-      # is toggled from System Settings > Power Management, through powerdevil's
-      # ideapad_acpi support. The EC keeps the setting across reboots.
+      # Battery conservation/charge thresholds are managed from Noctalia's
+      # Control Center Power tab through UPower; no powerdevil needed.
+
+      # Preserve the old powerdevil behavior: the power button sleeps, and
+      # closing the lid on AC does nothing. Battery lid-close still suspends;
+      # docked lid is ignored by logind.
+      services.logind.settings.Login = {
+        HandleLidSwitchExternalPower = "ignore";
+        HandlePowerKey = "suspend";
+      };
+
+      # powerdevil used to pick performance on AC and power-saver on battery.
+      # Reapply that from the adapter's udev event.
+      systemd.services.ppd-ac-profile = {
+        description = "Select the power profile for the current power source";
+        wantedBy = ["multi-user.target"];
+        wants = ["power-profiles-daemon.service"];
+        after = ["power-profiles-daemon.service"];
+        path = [pkgs.coreutils pkgs.power-profiles-daemon];
+
+        serviceConfig.Type = "oneshot";
+
+        script = ''
+          if [ "$(cat /sys/class/power_supply/ADP0/online)" = "1" ]; then
+            profile=performance
+          else
+            profile=power-saver
+          fi
+
+          if [ "$(powerprofilesctl get)" != "$profile" ]; then
+            powerprofilesctl set "$profile"
+          fi
+        '';
+      };
+
+      services.udev.extraRules = ''
+        SUBSYSTEM=="power_supply", KERNEL=="ADP0", ACTION=="change", RUN+="${lib.getExe' pkgs.systemd "systemctl"} --no-block start ppd-ac-profile.service"
+      '';
 
       # APPLICATIONS
       # nixpkgs dropped `stremio` along with qt5 webengine; this is its
@@ -138,7 +173,7 @@ in {
 
       # DDC/CI for the external monitor's brightness. brightnessctl only reaches
       # the internal panel's EC backlight, which is off while the AOC is
-      # connected; the caelestia shell sets VCP 10 over ddcutil instead.
+      # connected; the Noctalia shell sets VCP 10 over ddcutil instead.
       hardware.i2c.enable = true;
 
       # DISPLAYS

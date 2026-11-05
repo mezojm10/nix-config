@@ -1,5 +1,5 @@
 # Steam notifications go to the system notification daemon (notify-send →
-# Caelestia/Quickshell or any other daemon); Steam's own toasts are suppressed.
+# Noctalia or any other daemon); Steam's own toasts are suppressed.
 # Build: bun install && bun run build, then enable in Steam → Millennium → Plugins.
 
 [plugin]

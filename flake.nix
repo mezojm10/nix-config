@@ -22,16 +22,6 @@
     # on the Mac, which connects to the laptop's server.
     rex.url = "https://pkgs.superlogical.com/rex/nix/snapshot.tar.gz";
     rex.inputs.nixpkgs.follows = "nixpkgs";
-
-    # Fork of github:caelestia-dots/shell ported to niri. The source lives in
-    # ./caelestia-shell so shell changes apply without touching flake inputs.
-    caelestia-shell = {
-      url = "path:./caelestia-shell";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.quickshell.inputs.nixpkgs.follows = "nixpkgs";
-      inputs.m3shapes.inputs.nixpkgs.follows = "nixpkgs";
-      inputs.caelestia-cli.inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
 
   outputs = inputs:

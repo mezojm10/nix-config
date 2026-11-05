@@ -1,5 +1,4 @@
 {lib, ...}: let
-  inherit (lib.lists) singleton;
   inherit (lib.meta) getExe;
   inherit (lib.modules) mkIf;
 in {
@@ -10,8 +9,9 @@ in {
     ...
   }: {
     config = mkIf pkgs.stdenv.hostPlatform.isLinux {
-      # caelestia-cli writes ~/.config/gtk-{3,4}.0/gtk.css with the active
-      # scheme's colours on top of adw-gtk3, so GTK apps follow the shell.
+      # Noctalia's GTK templates write ~/.config/gtk-{3,4}.0/noctalia.css and
+      # import it from gtk.css on top of adw-gtk3, so GTK apps follow the
+      # shell. Leave gtk.css unmanaged here so the apply hook can rewrite it.
       gtk = {
         enable = true;
 
@@ -70,11 +70,10 @@ in {
         run mkdir -p "$HOME/Pictures/Screenshots"
       '';
 
-      # qtengine reads the KColorScheme and widget style that caelestia-cli
-      # writes to ~/.config/qtengine on every scheme change, so Qt apps follow
-      # the shell. No `style.name`, because the QT_STYLE_OVERRIDE it sets also
-      # becomes the Qt Quick Controls style and crashes Kirigami apps such as
-      # System Settings.
+      # qtengine reads the KColorScheme and widget style that Noctalia writes
+      # on every scheme change, so Qt apps follow the shell. No `style.name`,
+      # because the QT_STYLE_OVERRIDE it sets also becomes the Qt Quick
+      # Controls style and crashes Kirigami apps such as System Settings.
       qt = {
         enable = true;
 
@@ -84,9 +83,9 @@ in {
         };
 
         # KDE apps read fonts and icons from kdeglobals; qtengine supplies their
-        # palette from the KColorScheme caelestia-cli writes.
+        # palette from the KColorScheme Noctalia writes.
         kde.settings.kdeglobals = {
-          General.ColorScheme = "BreezeDark";
+          General.ColorScheme = "noctalia";
           General.font = "Inter,11,-1,5,400,0,0,0,0,0,0,0,0,0,0,1";
           Icons.Theme = "Papirus-Dark";
         };
@@ -94,24 +93,13 @@ in {
 
       # Link the repo copies instead of copying them into the store, so edits
       # apply without a rebuild.
-      home.file = {
-        ".config/niri".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/nix/dotfiles/niri";
-        ".config/quickshell/tokyo-night".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/nix/dotfiles/quickshell";
-      };
-
-      # Lets xdg-desktop-portal associate Quickshell's layer surfaces with an app.
-      xdg.desktopEntries."org.quickshell" = {
-        name = "Quickshell";
-        exec = "quickshell";
-        type = "Application";
-        noDisplay = true;
-      };
+      home.file.".config/niri".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/nix/dotfiles/niri";
 
       programs.ghostty = {
         enable = true;
 
         settings = {
-          theme = "tokyonight";
+          theme = "noctalia";
           font-family = "JetBrainsMono Nerd Font";
           font-size = 11;
           background-opacity = 0.94;
@@ -162,67 +150,6 @@ in {
             "15=#c0caf5"
           ];
         };
-      };
-
-      programs.swaylock = {
-        enable = true;
-
-        settings = {
-          color = "1a1b26";
-          inside-color = "1a1b26";
-          inside-clear-color = "1a1b26";
-          inside-ver-color = "1a1b26";
-          inside-wrong-color = "1a1b26";
-          ring-color = "7aa2f7";
-          ring-clear-color = "7dcfff";
-          ring-ver-color = "9ece6a";
-          ring-wrong-color = "f7768e";
-          key-hl-color = "9ece6a";
-          bs-hl-color = "f7768e";
-          separator-color = "00000000";
-          text-color = "c0caf5";
-          text-clear-color = "c0caf5";
-          text-ver-color = "c0caf5";
-          text-wrong-color = "f7768e";
-          line-color = "292e42";
-          line-uses-inside = true;
-          font = "JetBrainsMono Nerd Font";
-          font-size = 20;
-          indicator-radius = 120;
-          indicator-thickness = 6;
-          show-failed-attempts = true;
-          fade-in = 0.2;
-        };
-      };
-
-      services.cliphist = {
-        enable = true;
-      };
-
-      services.swayidle = {
-        # Caelestia's IdleMonitors daemon handles idle locking and DPMS.
-        enable = false;
-
-        events = {
-          before-sleep = "${getExe pkgs.swaylock} --daemonize";
-          lock = "${getExe pkgs.swaylock} --daemonize";
-        };
-
-        # Locking only. Idle suspend is set in System Settings > Power
-        # Management (powerdevil).
-        timeouts = singleton {
-          timeout = 300;
-          command = "${getExe pkgs.swaylock} --daemonize";
-        };
-      };
-
-      # The active shell is Caelestia (modules/desktop/caelestia.mod.nix). The
-      # Tokyo Night Quickshell config stays in dotfiles/quickshell for reference
-      # and can be started manually with `qs -c tokyo-night`.
-      programs.quickshell = {
-        enable = false;
-        activeConfig = "tokyo-night";
-        systemd.enable = true;
       };
     };
   };

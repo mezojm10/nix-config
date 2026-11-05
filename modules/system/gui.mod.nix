@@ -30,6 +30,10 @@ in {
   }: {
     imports = singleton inputs.helium.nixosModules.default;
 
+    # KDE apps (Dolphin, Ark) read services, QML modules and thumbnailers by
+    # XDG lookup, so link all of share/ into the system profile.
+    environment.pathsToLink = singleton "/share";
+
     # For CLI tools that open URLs (gh, jj, etc.).
     environment.sessionVariables.BROWSER = getExe config.programs.helium.package;
 
