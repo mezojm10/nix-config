@@ -13,14 +13,26 @@
     lib,
     pkgs,
     ...
-  }: {
+  }: let
+    # KConfig warns when qtengine hands it an absolute KColorScheme path. The
+    # prompt still works; quiet just that category for the askpass process.
+    askpass = pkgs.writeShellApplication {
+      name = "ksshaskpass-quiet";
+      text = ''
+        export QT_LOGGING_RULES="kf.config.core.warning=false''${QT_LOGGING_RULES:+;$QT_LOGGING_RULES}"
+        exec ${lib.getExe pkgs.kdePackages.ksshaskpass} "$@"
+      '';
+    };
+  in {
     # `enableAskPassword` defaults to xserver being enabled, so without this
     # NixOS exports an empty SSH_ASKPASS and ssh never finds the prompt.
     programs.ssh = {
       enableAskPassword = true;
-      askPassword = lib.getExe pkgs.kdePackages.ksshaskpass;
+      askPassword = lib.getExe askpass;
     };
 
+    # Keep the real package in the system profile: xdg-desktop-portal needs its
+    # org.kde.ksshaskpass.desktop file to register the askpass app ID.
     environment.systemPackages = [pkgs.kdePackages.ksshaskpass];
 
     # Use the askpass program even when a passphrase is requested from a

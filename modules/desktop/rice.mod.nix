@@ -91,6 +91,35 @@ in {
         };
       };
 
+      # qtengine reads the KColorScheme path from its own JSON config, not from
+      # kdeglobals. Point it at the scheme Noctalia writes so Qt apps follow the
+      # shell without retaining the old caelestia.colors file.
+      xdg.configFile."qtengine/config.json".source = (pkgs.formats.json {}).generate "qtengine-config.json" {
+        theme = {
+          colorScheme = "${config.home.homeDirectory}/.local/share/color-schemes/noctalia.colors";
+          iconTheme = "Papirus-Dark";
+          style = "Darkly";
+
+          font = {
+            family = "Sans Serif";
+            size = 12;
+            weight = -1;
+          };
+
+          fontFixed = {
+            family = "Monospace";
+            size = 12;
+            weight = -1;
+          };
+        };
+
+        misc = {
+          menusHaveIcons = true;
+          singleClickActivate = false;
+          shortcutsForContextMenus = true;
+        };
+      };
+
       # Link the repo copies instead of copying them into the store, so edits
       # apply without a rebuild.
       home.file.".config/niri".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/nix/dotfiles/niri";
