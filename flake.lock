@@ -193,7 +193,28 @@
         "millennium": "millennium",
         "nixpkgs": "nixpkgs",
         "rex": "rex",
+        "sidra": "sidra",
         "zen-browser": "zen-browser"
+      }
+    },
+    "sidra": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1793813048,
+        "narHash": "sha256-x9w3UPY6eAV/X0XhT/5qxndcwd1/iSxCfbs3tmXYDn4=",
+        "owner": "wimpysworld",
+        "repo": "sidra",
+        "rev": "58c6efa8499b8530e1284214513c99c7e382b4c3",
+        "type": "github"
+      },
+      "original": {
+        "owner": "wimpysworld",
+        "repo": "sidra",
+        "type": "github"
       }
     },
     "zen-browser": {

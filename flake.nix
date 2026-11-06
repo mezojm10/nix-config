@@ -11,6 +11,14 @@
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
     zen-browser.inputs.nixpkgs.follows = "nixpkgs";
     zen-browser.inputs.home-manager.follows = "home-manager";
+
+    # Apple Music desktop client. Upstream packages the signed release binary;
+    # there is no nixpkgs package yet.
+    sidra = {
+      url = "github:wimpysworld/sidra";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # Steam client plugin framework; the steam-notify plugin under
     # dotfiles/millennium forwards Steam's own toasts to the system daemon.
     millennium = {
