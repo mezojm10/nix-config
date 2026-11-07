@@ -68,21 +68,11 @@ in {
         options = ["fmask=0077" "dmask=0077"];
       };
 
-      # The NTFS games partition carried over from Windows, mounted with the
-      # in-kernel ntfs3 driver. Label it once with `ntfslabel <partition> Games`.
-      # NTFS has no Unix permissions, so the `users` group gets write access.
-      fileSystems."/mnt/games" = {
-        device = "/dev/disk/by-label/Games";
-        fsType = "ntfs3";
-        options = [
-          "gid=${toString config.ids.gids.users}"
-          "umask=0002"
-          "nofail"
-        ];
+      fileSystems."/mnt/hdd" = {
+        device = "/dev/disk/by-label/HDD";
+        fsType = "btrfs";
+	options = ["noatime" "compress=zstd" "nofail"];
       };
-
-      # ntfs-3g userspace tools (ntfsfix, ntfslabel) for maintaining that partition.
-      boot.supportedFilesystems.ntfs = true;
 
       # POWER
       # Battery conservation/charge thresholds are managed from Noctalia's
