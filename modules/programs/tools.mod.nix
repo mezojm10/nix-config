@@ -7,6 +7,7 @@
       awscli2
       bitwarden-cli
       devenv
+      fastfetch
       fd
       gh
       mosh

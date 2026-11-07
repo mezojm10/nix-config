@@ -38,6 +38,7 @@ in {
     environment.sessionVariables.BROWSER = getExe config.programs.helium.package;
 
     environment.systemPackages = with pkgs; [
+      easyeffects
       emacs-pgtk
       inputs.zen-browser.packages.${stdenv.hostPlatform.system}.default
       kdePackages.ark
