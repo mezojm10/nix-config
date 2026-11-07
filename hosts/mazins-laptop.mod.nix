@@ -239,8 +239,8 @@ in {
         # pins VK_DRIVER_FILES to the NVIDIA ICD; the module seeds the folders.
         programs.bbport = {
           enable = true;
-          gameDir = "/mnt/games/Games/Bloodborne/game";
-          userDir = "/mnt/games/Games/Bloodborne/Saves";
+          gameDir = "/mnt/hdd/games/Bloodborne/game";
+          userDir = "/mnt/hdd/games/Bloodborne/Saves";
         };
       };
     });
