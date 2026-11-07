@@ -33,7 +33,9 @@
       pulse.enable = true;
     };
 
-    # Compressed swap in RAM instead of a swap partition.
+    # Compressed swap in RAM instead of a swap partition. Priority 100 keeps it
+    # ahead of any disk-backed swap tier, which would sit at a lower value.
     zramSwap.enable = true;
+    zramSwap.priority = 100;
   };
 }

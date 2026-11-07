@@ -41,6 +41,12 @@ in {
       # Partitions are referenced by label, so the installer must create them as
       # `mkfs.fat -F 32 -n BOOT` and `mkfs.btrfs --label nixos`, the latter with
       # the subvolumes @, @home and @nix.
+      fileSystems."/boot" = {
+        device = "/dev/disk/by-label/BOOT";
+        fsType = "vfat";
+        options = ["fmask=0077" "dmask=0077"];
+      };
+
       fileSystems."/" = {
         device = "/dev/disk/by-label/nixos";
         fsType = "btrfs";
@@ -59,29 +65,35 @@ in {
         options = ["subvol=@nix" "compress=zstd" "noatime"];
       };
 
-      # Monthly checksum verification of the btrfs volume.
-      services.btrfs.autoScrub.enable = true;
-
-      fileSystems."/boot" = {
-        device = "/dev/disk/by-label/BOOT";
-        fsType = "vfat";
-        options = ["fmask=0077" "dmask=0077"];
-      };
-
+      # HDD
       fileSystems."/mnt/hdd" = {
         device = "/dev/disk/by-label/HDD";
         fsType = "btrfs";
 	options = ["noatime" "compress=zstd" "nofail"];
       };
 
+      # Monthly checksum verification of the btrfs volume.
+      services.btrfs.autoScrub.enable = true;
+
+      # Do not enable boot.zswap: it caches every swap device, zram included,
+      # so pages would be compressed twice.
+      swapDevices = singleton {
+        device = "/dev/disk/by-label/SWAP";
+        priority = 10;
+      };
+      boot.resumeDevice = "/dev/disk/by-label/SWAP";
+
+      systemd.sleep.settings.Sleep.HibernateDelaySec = "30min";
+
       # POWER
       # Battery conservation/charge thresholds are managed from Noctalia's
       # Control Center Power tab through UPower; no powerdevil needed.
 
       # Preserve the old powerdevil behavior: the power button sleeps, and
-      # closing the lid on AC does nothing. Battery lid-close still suspends;
+      # closing the lid on AC does nothing. Battery lid-close suspends then hibernates;
       # docked lid is ignored by logind.
       services.logind.settings.Login = {
+        HandleLidSwitch = "suspend-then-hibernate";
         HandleLidSwitchExternalPower = "ignore";
         HandlePowerKey = "suspend";
       };
