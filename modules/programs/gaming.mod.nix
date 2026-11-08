@@ -7,7 +7,6 @@
   inherit (lib.lists) singleton;
   inherit (lib.meta) getExe;
   inherit (lib.modules) mkIf;
-  inherit (lib.strings) makeBinPath;
 in {
   flake.nixosModules.gaming = {pkgs, ...}: {
     nixpkgs.allowedUnfreePackages = ["steam" "steam-unwrapped"];
@@ -65,8 +64,6 @@ in {
           bash
           */
           ''
-            PATH=${makeBinPath [pkgs.mangohud]}:$PATH
-
             exec ${getExe pkgs.gamescope} \
               --output-width ${toString output.width} \
               --output-height ${toString output.height} \
@@ -75,7 +72,6 @@ in {
               --nested-refresh ${toString preset.fps} \
               --scaler ${preset.scaler} \
               --filter ${preset.filter} \
-              --mangoapp \
               --fullscreen \
               -- "$@"
           '';
