@@ -13,6 +13,7 @@
 
     programs.opencode = {
       enable = true;
+      context = ../../dotfiles/opencode/AGENTS.md;
     };
   };
 }
