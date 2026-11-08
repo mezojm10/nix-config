@@ -141,6 +141,7 @@ in {
           copy-on-select = "clipboard";
           confirm-close-surface = false;
           shell-integration = "detect";
+          command = "${getExe pkgs.nushell}";
 
           keybind = [
             "ctrl+shift+c=copy_to_clipboard"
