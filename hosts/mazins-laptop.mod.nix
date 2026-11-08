@@ -89,13 +89,12 @@ in {
       # Battery conservation/charge thresholds are managed from Noctalia's
       # Control Center Power tab through UPower; no powerdevil needed.
 
-      # Preserve the old powerdevil behavior: the power button sleeps, and
-      # closing the lid on AC does nothing. Battery lid-close suspends then hibernates;
-      # docked lid is ignored by logind.
+      # Power button and battery lid-close suspend then hibernate after
+      # HibernateDelaySec; closing the lid on AC (or while docked) does nothing.
       services.logind.settings.Login = {
         HandleLidSwitch = "suspend-then-hibernate";
         HandleLidSwitchExternalPower = "ignore";
-        HandlePowerKey = "suspend";
+        HandlePowerKey = "suspend-then-hibernate";
       };
 
       # powerdevil used to pick performance on AC and power-saver on battery.

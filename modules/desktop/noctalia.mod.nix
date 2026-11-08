@@ -37,6 +37,9 @@ in {
               category_icons_only = true;
               layout = "simple";
             };
+
+	    # Hibernate after suspend
+	    session.power.suspend = "systemctl suspend-then-hibernate";
           };
 
           theme = {
