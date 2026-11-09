@@ -6,6 +6,7 @@
   inherit (lib.attrsets) genAttrs;
   inherit (lib.lists) singleton;
   inherit (lib.meta) getExe;
+  inherit (lib.modules) mkMerge;
 in {
   flake.darwinModules.gui = {pkgs, ...}: {
     nixpkgs.allowedUnfreePackages = ["raycast"];
@@ -40,23 +41,34 @@ in {
     environment.systemPackages = with pkgs; [
       easyeffects
       emacs-pgtk
+      foliate
       inputs.zen-browser.packages.${stdenv.hostPlatform.system}.default
       kdePackages.ark
       kdePackages.dolphin
       vlc
     ];
 
-    # Default browser for links, via the system-wide mimeapps.list.
-    xdg.mime.defaultApplications =
-      genAttrs [
+    # Defaults via the system-wide mimeapps.list: Helium for web links, Foliate
+    # for ebooks.
+    xdg.mime.defaultApplications = mkMerge [
+      (genAttrs [
         "application/xhtml+xml"
         "text/html"
         "x-scheme-handler/about"
         "x-scheme-handler/http"
         "x-scheme-handler/https"
         "x-scheme-handler/unknown"
-      ]
-      (_: "helium.desktop");
+      ] (_: "helium.desktop"))
+
+      (genAttrs [
+        "application/epub+zip"
+        "application/x-mobipocket-ebook"
+        "application/vnd.amazon.mobi8-ebook"
+        "application/x-fictionbook+xml"
+        "application/x-zip-compressed-fb2"
+        "application/vnd.comicbook+zip"
+      ] (_: "com.github.johnfactotum.Foliate.desktop"))
+    ];
 
     programs.helium.enable = true;
   };
