@@ -174,10 +174,10 @@
         ]
       },
       "locked": {
-        "lastModified": 1794069975,
-        "narHash": "sha256-LTqq3CxsWcacLP5EPjGVSwm9Ft0RCSGtTjWxMZjz2Kg=",
+        "lastModified": 1794111130,
+        "narHash": "sha256-ZUIhnzNpmuEheybfzs9fFiLkicGWAqZVbTNSBxvLdZc=",
         "type": "tarball",
-        "url": "https://pkgs.superlogical.com/rex/nix/snapshot/0.0.1794069975-g6c6689.tar.gz"
+        "url": "https://pkgs.superlogical.com/rex/nix/snapshot/0.0.1794111130-g9bcf6a.tar.gz"
       },
       "original": {
         "type": "tarball",
@@ -204,11 +204,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1794094207,
-        "narHash": "sha256-Dffnnnh4eHvFNO3eclVcqFHXf7S+qmCpcQoZL1iukmU=",
+        "lastModified": 1794185541,
+        "narHash": "sha256-N9AKl9o0m/jxOdZfz/CWKG4g+vcx3VYELlhi4Ey8frc=",
         "owner": "wimpysworld",
         "repo": "sidra",
-        "rev": "e6e3d64a6689258e638eb6bb96a5b7cf2fa3f720",
+        "rev": "be750fa4d1074df853e90b0c639856e0a4bb82d5",
         "type": "github"
       },
       "original": {
@@ -227,11 +227,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1793999934,
-        "narHash": "sha256-2VbZROa77YEzzuUyRStmHdkrjV89YALYL566Ssij0Fk=",
+        "lastModified": 1794215717,
+        "narHash": "sha256-es8MSf8k9iRKAW0ny1Dfqo09imWwx0w561wbuz4u5Xk=",
         "owner": "0xc000022070",
         "repo": "zen-browser-flake",
-        "rev": "37ba4a650eaeeb5a086114da3a2cdf7593967d12",
+        "rev": "3c9c2843c3ca92de0c82f98e1c4641d95e7163f2",
         "type": "github"
       },
       "original": {
