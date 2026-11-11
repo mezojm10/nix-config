@@ -1,16 +1,15 @@
 {...}: {
-  flake.homeModules.shell = {
-    lib,
-    pkgs,
-    ...
-  }: let
-    inherit (lib.trivial) readFile;
-  in {
+  flake.homeModules.shell = {pkgs, ...}: {
     # Shell aliases
     home.shellAliases = {
       cat = "bat";
       lg = "lazygit";
       vim = "nvim";
+    };
+
+    programs.carapace = {
+      enable = true;
+      enableNushellIntegration = true;
     };
 
     programs.bat = {
@@ -75,9 +74,6 @@
 
       # Pick up `home.sessionVariables` (e.g. CLAUDE_CODE_CERT_STORE) in env.nu.
       loadSessionVariables = true;
-
-      # Completions for jj
-      extraConfig = readFile ../../dotfiles/nushell/jj-completions.nu;
     };
 
     programs.starship = {
