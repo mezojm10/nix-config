@@ -96,3 +96,41 @@
 ;;
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
+
+
+;; ════════════════════════════════════════════════════════════════════════════
+;; Frames instead of Emacs windows — niri owns the window layout
+;; ════════════════════════════════════════════════════════════════════════════
+
+;; New frames should join the *current* workspace, not spawn a fresh `#N` one.
+;; Doom's `workspaces` module otherwise runs `+workspaces-associate-frame-fn`
+;; (which creates a new perspective) for every frame. `-1` un-registers that
+;; override so persp-mode falls back to its default: reuse the last-active
+;; workspace (`persp-set-last-persp-for-new-frames` is already `t`).
+(after! persp-mode
+  (setq persp-interactive-init-frame-behaviour-override -1
+        persp-emacsclient-init-frame-behaviour-override -1))
+
+;; Manual split keys (C-w s / C-w v, and Doom's C-w S / C-w V "follow"
+;; variants) open a new frame instead of splitting the current one. Direction is
+;; irrelevant now that niri does the tiling, so all four just make a frame.
+(map! :map evil-window-map
+      "s" #'make-frame-command
+      "v" #'make-frame-command
+      "S" #'make-frame-command
+      "V" #'make-frame-command)
+
+;; Auto-popups (help, magit, org links, lsp, etc.) also open a new frame
+;; instead of splitting. Note: Doom's `(popup +defaults)` module adds its own
+;; `display-buffer-alist` rules that would override this for buffers like
+;; `*Help*`; see init.el where that module is disabled.
+(setq display-buffer-base-action
+      '((display-buffer-reuse-window display-buffer-pop-up-frame)
+        (reusable-frames . t)))
+
+;; `frames-only-mode` smooths the rough edges of a frames-only workflow: it
+;; deletes the frame when magit/help/completions are closed (no leftover empty
+;; frames), keeps completion popups in-window, and tunes org/ediff/ido.
+(use-package! frames-only-mode
+  :config
+  (frames-only-mode +1))

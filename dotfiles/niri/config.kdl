@@ -146,6 +146,13 @@ animations {
 }
 
 
+// ---------------------------------------------------------------- startup
+
+// The Emacs daemon, so `emacsclient -c` frames open instantly (frames-only:
+// niri manages each Emacs frame as its own window).
+spawn-at-startup "emacs" "--daemon";
+
+
 // ---------------------------------------------------------------- window rules
 
 window-rule {
@@ -228,8 +235,6 @@ binds {
     Mod+Shift+C hotkey-overlay-title="Clipboard history" { spawn "noctalia" "msg" "panel-toggle" "clipboard"; }
     Mod+Escape hotkey-overlay-title="Power menu" { spawn "noctalia" "msg" "panel-toggle" "session"; }
     Mod+Shift+D hotkey-overlay-title="Control center" { spawn "noctalia" "msg" "panel-toggle" "control-center"; }
-    Mod+Shift+A hotkey-overlay-title="Control center" { spawn "noctalia" "msg" "panel-toggle" "control-center"; }
-    Mod+Shift+S hotkey-overlay-title="Control center" { spawn "noctalia" "msg" "panel-toggle" "control-center"; }
     Mod+Shift+Comma hotkey-overlay-title="Shell settings" { spawn "noctalia" "msg" "settings-toggle"; }
     Super+Alt+L hotkey-overlay-title="Lock screen" { spawn "noctalia" "msg" "session" "lock"; }
 
