@@ -127,8 +127,12 @@ in {
 
       # APPLICATIONS
       # nixpkgs dropped `stremio` along with qt5 webengine; this is its
-      # replacement Linux shell.
-      environment.systemPackages = singleton pkgs.stremio-linux-shell;
+      # replacement Linux shell. Hookshot Builder wraps the upstream AppImage;
+      # it builds the game locally from the user's own dump.
+      environment.systemPackages = [
+        pkgs.stremio-linux-shell
+        inputs.self.packages.${pkgs.stdenv.hostPlatform.system}.hookshot
+      ];
 
       # GRAPHICS
       # VA-API video decoding on the Intel iGPU, which renders by default.
