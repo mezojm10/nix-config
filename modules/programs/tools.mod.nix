@@ -12,6 +12,7 @@
       gh
       mosh
       nodejs
+      qbittorrent
       ripgrep
     ];
   };
